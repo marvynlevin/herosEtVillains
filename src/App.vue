@@ -1,0 +1,100 @@
+<template>
+  <v-app>
+    <!-- Bandeau en haut -->
+    <v-app-bar app>
+      <v-btn icon @click="drawer = !drawer">
+        <v-icon>mdi-menu</v-icon>
+      </v-btn>
+      <v-spacer></v-spacer>
+      <v-btn @click="goToAuth">Se connecter</v-btn>
+    </v-app-bar>
+
+    <!-- Menu (Tiroir) -->
+    <v-navigation-drawer v-model="drawer" app>
+      <v-list>
+        <v-list-item @click="goToHomePage">
+          <v-list-item-content>
+            <v-list-item-title>Accueil</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item @click="goToOrgList">
+          <v-list-item-content>
+            <v-list-item-title>Organisations</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item @click="goToTeamList">
+          <v-list-item-content>
+            <v-list-item-title>Équipes</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
+    <!-- Contenu principal -->
+    <v-main>
+      <router-view></router-view>
+    </v-main>
+
+    <!-- Saisie du secret -->
+    <v-dialog v-model="dialog" max-width="500px">
+      <v-card>
+        <v-card-title class="headline">Saisir la phrase secrète</v-card-title>
+        <v-card-text>
+          <v-text-field
+              v-model="secret"
+              label="Phrase secrète"
+              type="password"
+          ></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" @click="saveSecret">Enregistrer</v-btn>
+          <v-btn @click="dialog = false">Annuler</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-app>
+</template>
+
+<script>
+import {mapGetters} from "vuex";
+
+export default {
+  data() {
+    return {
+      drawer: false,
+      secret: '',
+      dialog: false,
+    };
+  },
+  computed: {
+    ...mapGetters("org", ["getOrgSecret", "getCurrentOrg"])
+  },
+
+  methods: {
+    goToAuth() {
+      this.$router.push({name: 'Auth'}).catch(() => {
+      });
+    },
+    goToOrgList() {
+      if (this.getOrgSecret !== null) {
+        this.$router.push({name: 'OrgList'}).catch(() => {
+        });
+      }
+    },
+    goToTeamList() {
+      if (this.getOrgSecret !== null && this.getCurrentOrg !== null) {
+        this.$router.push({name: 'TeamList'}).catch(() => {
+        });
+      }
+    },
+    goToHomePage() {
+      this.$router.push({name: 'Home'}).catch(() => {
+      });
+    },
+    saveSecret() {
+      this.$store.commit("SET_CURRENT_ORG_SECRET", this.secret);
+      this.dialog = false;
+    },
+  },
+};
+</script>

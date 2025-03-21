@@ -10,6 +10,7 @@
 			<v-btn v-if="!isLoggedIn" text @click="goToLogin">Se connecter</v-btn>
 			<v-btn v-else text @click="logout">Se déconnecter</v-btn>
 			<v-btn text @click="openSecretDialog">Phrase secrète</v-btn>
+			<v-btn v-if="!isLoggedIn" text @click="goToRegister">S'inscrire</v-btn>
 		</v-app-bar>
 
 		<!-- Menu (Tiroir) -->
@@ -92,15 +93,14 @@ export default {
 		goToLogin() {
 			this.$router.push({name: 'Login'});
 		},
+		goToRegister() {
+			this.$router.push({name: 'Register'});
+		},
 		logout() {
 			localStorage.removeItem('xsrfToken');
 			localStorage.removeItem('login');
 			this.isLoggedIn = false;
 			this.$router.push({name: 'Home'});
-		},
-		goToAuth() {
-			this.$router.push({name: 'Auth'}).catch(() => {
-			});
 		},
 		goToOrgList() {
 			if (this.getOrgSecret !== null) {

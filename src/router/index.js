@@ -8,6 +8,7 @@ import AuthComponent from '@/components/AuthComponent.vue';
 import store from '@/store';
 import UserAuthComponent from "@/components/UserAuthComponent.vue";
 import HeroAuthUpdateComponent from "@/components/HeroAuthUpdateComponent.vue";
+import UserRegisterComponent from "@/components/UserRegisterComponent.vue";
 
 
 Vue.use(Router);
@@ -36,6 +37,11 @@ const router = new Router({
             path: '/updatehero',
             name: 'HeroAuthUpdate',
             component: HeroAuthUpdateComponent
+        },
+        {
+            path: '/register',
+            name: 'Register',
+            component: UserRegisterComponent
         },
         {
             path: '*',

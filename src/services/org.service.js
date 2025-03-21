@@ -53,8 +53,8 @@ export async function removeTeamFromOrg(orgData, orgSecret) {
 
 export async function getOrgById(id, orgSecret) {
     try {
-        const response = await getRequest(`/orgs/getbyid/${id}`, 'GETORG_BYID');
-        console.log("réponse de l'api: ", response, {headers: {'org-secret': orgSecret}});
+        const response = await getRequest(`/orgs/getbyid/${id}`, 'GETORG_BYID', {headers: {'org-secret': orgSecret}});
+        console.log("réponse de l'api: ", response,);
         return response;
     } catch (error) {
         const errorMessage = error.response?.data?.data || 'Une erreur est survenue lors de la récupération de l\'organisation.';

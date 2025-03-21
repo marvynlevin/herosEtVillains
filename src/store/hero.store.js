@@ -7,7 +7,6 @@ export default {
         heroesDetails: [],
         currentHero: null,
         loading: false,
-        error: null,
     },
     mutations: {
         SET_HEROES_ALIASES(state, aliases) {
@@ -18,9 +17,6 @@ export default {
         },
         SET_LOADING(state, loading) {
             state.loading = loading;
-        },
-        SET_ERROR(state, error) {
-            state.error = error;
         },
         ADD_HERO(state, newHero) {
             state.heroesAliases.push(newHero);
@@ -36,32 +32,32 @@ export default {
         },
     },
     actions: {
-        async fetchHeroesAliases({commit}) {
+        async fetchHeroesAliases({commit, dispatch}) {
             commit("SET_LOADING", true);
             try {
                 const heroes = await getAllHeroes();
                 commit("SET_HEROES_ALIASES", heroes);
             } catch (error) {
-                commit("SET_ERROR", error.message);
+                dispatch("error/setError", error.message, {root: true});
             } finally {
                 commit("SET_LOADING", false);
             }
         },
 
-        async fetchHeroById({commit}, {id, orgSecret}) {
+        async fetchHeroById({commit, dispatch}, {id, orgSecret}) {
             commit("SET_LOADING", true);
             try {
                 const hero = await getHeroById(id, orgSecret);
                 commit("SET_HERO_DETAILS", hero[0]);
                 return hero[0];
             } catch (error) {
-                commit("SET_ERROR", error.message);
+                dispatch("error/setError", error.message, {root: true});
             } finally {
                 commit("SET_LOADING", false);
             }
         },
 
-        async createHero({commit}, heroData) {
+        async createHero({commit, dispatch}, heroData) {
             commit("SET_LOADING", true);
             try {
                 const newHero = await createHero(heroData);
@@ -69,20 +65,20 @@ export default {
                 commit("SET_CURRENT_HERO", newHero);
                 return newHero;
             } catch (error) {
-                commit("SET_ERROR", error.message);
+                dispatch("error/setError", error.message, {root: true});
             } finally {
                 commit("SET_LOADING", false);
             }
         },
 
-        async updateHero({commit, state}, {heroData, orgSecret}) {
+        async updateHero({commit, state, dispatch}, {heroData, orgSecret}) {
             commit("SET_LOADING", true);
             try {
                 const updatedHero = await updateHero(heroData, orgSecret);
                 commit("SET_HERO_DETAILS", updatedHero);
                 commit("SET_CURRENT_HERO", updatedHero);
             } catch (error) {
-                commit("SET_ERROR", error.message);
+                dispatch("error/setError", error.message, {root: true});
             } finally {
                 commit("SET_LOADING", false);
             }

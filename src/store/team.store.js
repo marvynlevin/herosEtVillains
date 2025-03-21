@@ -11,7 +11,6 @@ export default {
         teams: [],
         currentTeam: null,
         loading: false,
-        error: null,
     },
     mutations: {
         SET_TEAMS(state, teams) {
@@ -26,9 +25,6 @@ export default {
         SET_LOADING(state, loading) {
             state.loading = loading;
         },
-        SET_ERROR(state, error) {
-            state.error = error;
-        },
         ADD_MEMBER_TO_TEAM(state, hero) {
             if (state.currentTeam && state.currentTeam.members) {
                 state.currentTeam.members.push(hero);
@@ -41,50 +37,50 @@ export default {
         },
     },
     actions: {
-        async fetchTeams({commit}) {
+        async fetchTeams({commit, dispatch}) {
             commit("SET_LOADING", true);
             try {
                 const teams = await getAllTeams();
                 commit("SET_TEAMS", teams);
             } catch (error) {
-                commit("SET_ERROR", error.message);
+                dispatch("error/setError", error.message, {root: true});
             } finally {
                 commit("SET_LOADING", false);
             }
         },
 
-        async createTeam({commit}, teamData) {
+        async createTeam({commit, dispatch}, teamData) {
             commit("SET_LOADING", true);
             try {
                 const newTeam = await createTeam(teamData);
                 commit("ADD_TEAM", newTeam);
                 commit("SET_CURRENT_TEAM", newTeam);
             } catch (error) {
-                commit("SET_ERROR", error.message);
+                dispatch("error/setError", error.message, {root: true});
             } finally {
                 commit("SET_LOADING", false);
             }
         },
 
-        async addMemberToTeam({commit}, {teamId, heroId}) {
+        async addMemberToTeam({commit, dispatch}, {teamId, heroId}) {
             commit("SET_LOADING", true);
             try {
                 const updatedTeam = await addHeroesToTeam({idTeam: teamId, idHeroes: [heroId]});
                 commit("ADD_MEMBER_TO_TEAM", updatedTeam);
             } catch (error) {
-                commit("SET_ERROR", error.message);
+                dispatch("error/setError", error.message, {root: true});
             } finally {
                 commit("SET_LOADING", false);
             }
         },
 
-        async removeMemberFromTeam({commit}, {teamId, heroId}) {
+        async removeMemberFromTeam({commit, dispatch}, {teamId, heroId}) {
             commit("SET_LOADING", true);
             try {
                 await removeHeroesFromTeam({idTeam: teamId, idHeroes: [heroId]});
                 commit("REMOVE_MEMBER_FROM_TEAM", heroId);
             } catch (error) {
-                commit("SET_ERROR", error.message);
+                dispatch("error/setError", error.message, {root: true});
             } finally {
                 commit("SET_LOADING", false);
             }
@@ -94,6 +90,5 @@ export default {
         getTeams: (state) => state.teams,
         getCurrentTeam: (state) => state.currentTeam,
         isTeamLoading: (state) => state.loading,
-        getTeamError: (state) => state.error,
     },
 };

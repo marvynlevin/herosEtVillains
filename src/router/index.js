@@ -34,7 +34,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-    if (to.meta?.guard) {
+    if (to?.meta?.requiresAuth) {
         if (store.getters['org/getOrgSecret']) {
             next();
         } else {

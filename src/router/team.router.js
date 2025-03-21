@@ -10,7 +10,7 @@ export const teamRoutes = [
     {
         path: '/teams/:id',
         name: 'TeamDetail',
-        meta: {guard: 1},
+        meta: {requiresAuth: 1},
         component: TeamDetailComponent,
         props: true, // Passe l'id de l'équipe à la props du composant
     },

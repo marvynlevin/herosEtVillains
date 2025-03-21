@@ -11,7 +11,7 @@ export const orgRoutes = [
         path: '/orgs/:id',
         name: 'OrgDetail',
         component: OrgDetailComponent,
-        meta: {guard: 1},
+        meta: {requiresAuth: 1},
         props: true, // Passe l'id de l'organisation à la props du composant
     },
 ];

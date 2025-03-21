@@ -49,3 +49,13 @@ export async function getHeroById(id, orgSecret) {
         throw new Error(errorMessage);
     }
 }
+
+export async function updateAuthHero(heroData) {
+    try {
+        const response = await putRequest('/herocorp/heroes/authupdate', heroData, 'UPDATEAUTHHERO');
+        return response.data;
+    } catch (error) {
+        const errorMessage = error.response?.data?.data || 'Une erreur est survenue lors de la mise à jour du héros.';
+        throw new Error(errorMessage);
+    }
+}

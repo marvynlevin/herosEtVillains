@@ -17,6 +17,7 @@ export const AuthService = {
                 {login, password},
                 'LOGIN'
             );
+            localStorage.setItem('login', login);
             return response.data;
         } catch (error) {
             const errorMessage =

@@ -40,6 +40,9 @@
 					</v-alert>
 				</v-form>
 			</v-card-text>
+			<v-card-actions>
+				<v-btn color="secondary" @click="goToUpdateHero">Modifier mon héro</v-btn>
+			</v-card-actions>
 		</v-card>
 	</v-container>
 </template>
@@ -83,13 +86,13 @@ export default {
 				const response = await AuthService.login(this.login, this.password);
 				console.log(response);
 
-				if (response.status === 200) {
-					this.user = response.data;
-					localStorage.setItem('xsrfToken', response.data.xsrfToken);
+				if (response) {
+					this.user = response;
+					localStorage.setItem('xsrfToken', response.xsrfToken);
 
 					await this.$router.push({name: 'Home'});
 				} else {
-					this.error = response.data || 'Erreur de connexion inconnue';
+					this.error = response || 'Erreur de connexion inconnue';
 				}
 			} catch (error) {
 				this.error = error.message || 'Erreur de connexion inconnue';
@@ -97,6 +100,9 @@ export default {
 				this.loading = false;
 			}
 		},
+		goToUpdateHero() {
+			this.$router.push({name: 'HeroAuthUpdate'});
+		}
 	},
 };
 </script>

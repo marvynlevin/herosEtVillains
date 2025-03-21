@@ -5,8 +5,11 @@
 			<v-btn icon @click="drawer = !drawer">
 				<v-icon>mdi-menu</v-icon>
 			</v-btn>
+			<v-toolbar-title>Héros et Villains</v-toolbar-title>
 			<v-spacer></v-spacer>
-			<v-btn @click="goToAuth">Se connecter</v-btn>
+			<v-btn v-if="!isLoggedIn" text @click="goToLogin">Se connecter</v-btn>
+			<v-btn v-else text @click="logout">Se déconnecter</v-btn>
+			<v-btn text @click="openSecretDialog">Phrase secrète</v-btn>
 		</v-app-bar>
 
 		<!-- Menu (Tiroir) -->
@@ -77,6 +80,7 @@ export default {
 			drawer: false,
 			secret: '',
 			dialog: false,
+			isLoggedIn: !!localStorage.getItem('xsrfToken'),
 		};
 	},
 	computed: {
@@ -85,6 +89,15 @@ export default {
 	},
 
 	methods: {
+		goToLogin() {
+			this.$router.push({name: 'Login'});
+		},
+		logout() {
+			localStorage.removeItem('xsrfToken');
+			localStorage.removeItem('login');
+			this.isLoggedIn = false;
+			this.$router.push({name: 'Home'});
+		},
 		goToAuth() {
 			this.$router.push({name: 'Auth'}).catch(() => {
 			});
@@ -106,11 +119,19 @@ export default {
 			});
 		},
 		saveSecret() {
-			this.$store.commit("SET_CURRENT_ORG_SECRET", this.secret);
+			this.$store.commit("org/SET_CURRENT_ORG_SECRET", this.secret);
 			this.dialog = false;
 		},
 		closeErrorDialog() {
 			this.$store.commit("error/CLEAR_ERROR");
+		},
+		openSecretDialog() {
+			this.dialog = true;
+		}
+	},
+	watch: {
+		'$route'() {
+			this.isLoggedIn = !!localStorage.getItem('xsrfToken');
 		},
 	},
 };

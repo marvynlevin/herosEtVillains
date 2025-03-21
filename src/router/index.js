@@ -6,6 +6,8 @@ import {orgRoutes} from './org.router';
 import {teamRoutes} from './team.router';
 import AuthComponent from '@/components/AuthComponent.vue';
 import store from '@/store';
+import UserAuthComponent from "@/components/UserAuthComponent.vue";
+import HeroAuthUpdateComponent from "@/components/HeroAuthUpdateComponent.vue";
 
 
 Vue.use(Router);
@@ -25,6 +27,16 @@ const router = new Router({
         },
         ...orgRoutes,
         ...teamRoutes,
+        {
+            path: '/login',
+            name: 'Login',
+            component: UserAuthComponent
+        },
+        {
+            path: '/updatehero',
+            name: 'HeroAuthUpdate',
+            component: HeroAuthUpdateComponent
+        },
         {
             path: '*',
             name: '404',

@@ -9,7 +9,7 @@ import {getRequest, postRequest, patchRequest} from "@/services/axios.service";
 
 export async function getAllOrgs() {
     try {
-        const response = await getRequest('/orgs/get', 'GETALLORGS');
+        const response = await getRequest('/herocorp/orgs/get', 'GETALLORGS');
         return response.data;
     } catch (error) {
         const errorMessage = error.response?.data?.data || 'Une erreur est survenue lors de la récupération des organisations.';
@@ -19,7 +19,7 @@ export async function getAllOrgs() {
 
 export async function createOrg(orgData) {
     try {
-        const response = await postRequest('/orgs/create', orgData, 'CREATEORG');
+        const response = await postRequest('/herocorp/orgs/create', orgData, 'CREATEORG');
         return response.data;
     } catch (error) {
         const errorMessage = error.response?.data?.data || 'Une erreur est survenue lors de la création de l\'organisation.';
@@ -32,7 +32,7 @@ export async function addTeamToOrg(orgData, orgSecret) {
         console.log("Data;", orgData);
         console.log("Secret;", orgSecret);
         const config = {headers: {'org-secret': orgSecret}};
-        const response = await patchRequest('/orgs/addteam', orgData, 'ADDTEAMTOORG', config);
+        const response = await patchRequest('/herocorp/orgs/addteam', orgData, 'ADDTEAMTOORG', config);
         return response.data;
     } catch (error) {
         const errorMessage = error.response?.data?.data || 'Une erreur est survenue lors de l\'ajout de l\'équipe à l\'organisation.';
@@ -43,7 +43,7 @@ export async function addTeamToOrg(orgData, orgSecret) {
 export async function removeTeamFromOrg(orgData, orgSecret) {
     try {
         const config = {headers: {'org-secret': orgSecret}};
-        const response = await patchRequest('/orgs/removeteam', orgData, 'REMOVETEAMFROMORG', config);
+        const response = await patchRequest('/herocorp/orgs/removeteam', orgData, 'REMOVETEAMFROMORG', config);
         return response.data;
     } catch (error) {
         const errorMessage = error.response?.data?.data || 'Une erreur est survenue lors de la suppression de l\'équipe de l\'organisation.';
@@ -53,7 +53,7 @@ export async function removeTeamFromOrg(orgData, orgSecret) {
 
 export async function getOrgById(id, orgSecret) {
     try {
-        const response = await getRequest(`/orgs/getbyid/${id}`, 'GETORG_BYID', {headers: {'org-secret': orgSecret}});
+        const response = await getRequest(`/herocorp/orgs/getbyid/${id}`, 'GETORG_BYID', {headers: {'org-secret': orgSecret}});
         console.log("réponse de l'api: ", response,);
         return response;
     } catch (error) {

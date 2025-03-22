@@ -1,5 +1,5 @@
-import OrgListComponent from '@/components/OrgListComponent.vue';
-import OrgDetailComponent from '@/components/OrgDetailComponent.vue';
+import OrgListComponent from '@/views/OrgListComponent.vue';
+import OrgDetailComponent from '@/views/OrgDetailComponent.vue';
 
 export const orgRoutes = [
     {

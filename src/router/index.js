@@ -1,14 +1,14 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import HomeView from '@/views/HomeView.vue';
-import NotFoundComponent from '@/components/NotFoundComponent.vue';
+import NotFoundComponent from '@/views/NotFoundComponent.vue';
 import {orgRoutes} from './org.router';
 import {teamRoutes} from './team.router';
-import AuthComponent from '@/components/AuthComponent.vue';
+import AuthComponent from '@/views/AuthComponent.vue';
 import store from '@/store';
-import UserAuthComponent from "@/components/UserAuthComponent.vue";
-import HeroAuthUpdateComponent from "@/components/HeroAuthUpdateComponent.vue";
-import UserRegisterComponent from "@/components/UserRegisterComponent.vue";
+import UserAuthComponent from "@/views/UserAuthComponent.vue";
+import HeroAuthUpdateComponent from "@/views/HeroAuthUpdateComponent.vue";
+import UserRegisterComponent from "@/views/UserRegisterComponent.vue";
 
 
 Vue.use(Router);

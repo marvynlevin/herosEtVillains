@@ -1,5 +1,5 @@
-import TeamListComponent from '@/components/TeamListComponent.vue';
-import TeamDetailComponent from '@/components/TeamDetailComponent.vue';
+import TeamListComponent from '@/views/TeamListComponent.vue';
+import TeamDetailComponent from '@/views/TeamDetailComponent.vue';
 
 export const teamRoutes = [
     {

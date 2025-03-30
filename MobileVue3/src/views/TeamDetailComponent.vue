@@ -1,132 +1,130 @@
 <template>
-	<ion-page>
-		<ion-header>
-			<ion-toolbar>
-				<ion-buttons slot="start">
-					<ion-back-button default-href="/orgs"></ion-back-button>
+	<ion-header>
+		<ion-toolbar>
+			<ion-buttons slot="start">
+				<ion-back-button default-href="/orgs"></ion-back-button>
+			</ion-buttons>
+			<ion-title v-if="currentTeam">{{ teamName }}</ion-title>
+		</ion-toolbar>
+	</ion-header>
+	<ion-content class="ion-padding">
+		<ion-card v-if="currentTeam">
+			<ion-card-header>
+				<ion-card-title>{{ teamName }}</ion-card-title>
+			</ion-card-header>
+			<ion-card-content>
+				<ion-button expand="full" @click="openAddMemberDialog">Ajouter un membre</ion-button>
+			</ion-card-content>
+		</ion-card>
+
+		<ion-list v-if="teamDetails.length">
+			<ion-list-header>Membres de l'équipe</ion-list-header>
+			<ion-item v-for="member in teamDetails" :key="member._id">
+				<ion-label>
+					<h2>{{ member.publicName }}</h2>
+					<p>{{ member.realName }}</p>
+				</ion-label>
+				<ion-buttons slot="end">
+					<ion-button @click="openEditMemberDialog(member)">
+						<ion-icon name="create"></ion-icon>
+					</ion-button>
+					<ion-button color="danger" @click="confirmDeleteMember(member)">
+						<ion-icon name="trash"></ion-icon>
+					</ion-button>
 				</ion-buttons>
-				<ion-title v-if="currentTeam">{{ teamName }}</ion-title>
-			</ion-toolbar>
-		</ion-header>
-		<ion-content class="ion-padding">
-			<ion-card v-if="currentTeam">
-				<ion-card-header>
-					<ion-card-title>{{ teamName }}</ion-card-title>
-				</ion-card-header>
-				<ion-card-content>
-					<ion-button expand="full" @click="openAddMemberDialog">Ajouter un membre</ion-button>
-				</ion-card-content>
-			</ion-card>
+			</ion-item>
+		</ion-list>
+		<ion-card v-else>
+			<ion-card-content>
+				<p>Aucun membre dans cette équipe.</p>
+			</ion-card-content>
+		</ion-card>
 
-			<ion-list v-if="teamDetails.length">
-				<ion-list-header>Membres de l'équipe</ion-list-header>
-				<ion-item v-for="member in teamDetails" :key="member._id">
-					<ion-label>
-						<h2>{{ member.publicName }}</h2>
-						<p>{{ member.realName }}</p>
-					</ion-label>
-					<ion-buttons slot="end">
-						<ion-button @click="openEditMemberDialog(member)">
-							<ion-icon name="create"></ion-icon>
-						</ion-button>
-						<ion-button color="danger" @click="confirmDeleteMember(member)">
-							<ion-icon name="trash"></ion-icon>
-						</ion-button>
-					</ion-buttons>
+		<ion-modal :is-open="editMemberDialog">
+			<ion-header>
+				<ion-toolbar>
+					<ion-title>Modifier un Héros</ion-title>
+				</ion-toolbar>
+			</ion-header>
+			<ion-content class="ion-padding">
+				<ion-item>
+					<ion-label position="floating">Nom public</ion-label>
+					<ion-input v-model="editHero.publicName" required></ion-input>
 				</ion-item>
-			</ion-list>
-			<ion-card v-else>
-				<ion-card-content>
-					<p>Aucun membre dans cette équipe.</p>
-				</ion-card-content>
-			</ion-card>
+				<ion-item>
+					<ion-label position="floating">Nom réel</ion-label>
+					<ion-input v-model="editHero.realName" required></ion-input>
+				</ion-item>
+				<div v-for="(power, index) in editHero.powers" :key="index">
+					<ion-item>
+						<ion-label position="floating">Nom du pouvoir</ion-label>
+						<ion-input v-model="power.name" required></ion-input>
+					</ion-item>
+					<ion-item>
+						<ion-label>Type de pouvoir</ion-label>
+						<ion-select v-model="power.type" :items="[1, 2, 3, 4, 5, 6, 7]" required></ion-select>
+					</ion-item>
+					<ion-item>
+						<ion-label>Niveau</ion-label>
+						<ion-range v-model="power.level" :min="0" :max="100" pin></ion-range>
+					</ion-item>
+					<ion-button color="danger" @click="removePower(index)">Supprimer</ion-button>
+				</div>
+				<ion-button expand="full" color="green" @click="addPower">Ajouter un pouvoir</ion-button>
+				<ion-button expand="full" @click="confirmEditMember">Modifier</ion-button>
+				<ion-button expand="full" fill="clear" @click="editMemberDialog = false">Annuler</ion-button>
+			</ion-content>
+		</ion-modal>
 
-			<ion-modal :is-open="editMemberDialog">
-				<ion-header>
-					<ion-toolbar>
-						<ion-title>Modifier un Héros</ion-title>
-					</ion-toolbar>
-				</ion-header>
-				<ion-content class="ion-padding">
-					<ion-item>
-						<ion-label position="floating">Nom public</ion-label>
-						<ion-input v-model="editHero.publicName" required></ion-input>
-					</ion-item>
-					<ion-item>
-						<ion-label position="floating">Nom réel</ion-label>
-						<ion-input v-model="editHero.realName" required></ion-input>
-					</ion-item>
-					<div v-for="(power, index) in editHero.powers" :key="index">
-						<ion-item>
-							<ion-label position="floating">Nom du pouvoir</ion-label>
-							<ion-input v-model="power.name" required></ion-input>
-						</ion-item>
-						<ion-item>
-							<ion-label>Type de pouvoir</ion-label>
-							<ion-select v-model="power.type" :items="[1, 2, 3, 4, 5, 6, 7]" required></ion-select>
-						</ion-item>
-						<ion-item>
-							<ion-label>Niveau</ion-label>
-							<ion-range v-model="power.level" :min="0" :max="100" pin></ion-range>
-						</ion-item>
-						<ion-button color="danger" @click="removePower(index)">Supprimer</ion-button>
-					</div>
-					<ion-button expand="full" color="green" @click="addPower">Ajouter un pouvoir</ion-button>
-					<ion-button expand="full" @click="confirmEditMember">Modifier</ion-button>
-					<ion-button expand="full" fill="clear" @click="editMemberDialog = false">Annuler</ion-button>
-				</ion-content>
-			</ion-modal>
+		<ion-modal :is-open="deleteDialog">
+			<ion-header>
+				<ion-toolbar>
+					<ion-title>Confirmation</ion-title>
+				</ion-toolbar>
+			</ion-header>
+			<ion-content class="ion-padding">
+				<p>Voulez-vous vraiment supprimer ce membre ?</p>
+				<ion-button color="danger" @click="deleteMember">Oui, supprimer</ion-button>
+				<ion-button fill="clear" @click="deleteDialog = false">Annuler</ion-button>
+			</ion-content>
+		</ion-modal>
 
-			<ion-modal :is-open="deleteDialog">
-				<ion-header>
-					<ion-toolbar>
-						<ion-title>Confirmation</ion-title>
-					</ion-toolbar>
-				</ion-header>
-				<ion-content class="ion-padding">
-					<p>Voulez-vous vraiment supprimer ce membre ?</p>
-					<ion-button color="danger" @click="deleteMember">Oui, supprimer</ion-button>
-					<ion-button fill="clear" @click="deleteDialog = false">Annuler</ion-button>
-				</ion-content>
-			</ion-modal>
-
-			<ion-modal :is-open="addMemberDialog">
-				<ion-header>
-					<ion-toolbar>
-						<ion-title>Ajouter un Héros</ion-title>
-					</ion-toolbar>
-				</ion-header>
-				<ion-content class="ion-padding">
+		<ion-modal :is-open="addMemberDialog">
+			<ion-header>
+				<ion-toolbar>
+					<ion-title>Ajouter un Héros</ion-title>
+				</ion-toolbar>
+			</ion-header>
+			<ion-content class="ion-padding">
+				<ion-item>
+					<ion-label position="floating">Nom public</ion-label>
+					<ion-input v-model="newHero.publicName" required></ion-input>
+				</ion-item>
+				<ion-item>
+					<ion-label position="floating">Nom réel</ion-label>
+					<ion-input v-model="newHero.realName" required></ion-input>
+				</ion-item>
+				<div v-for="(power, index) in newHero.powers" :key="index">
 					<ion-item>
-						<ion-label position="floating">Nom public</ion-label>
-						<ion-input v-model="newHero.publicName" required></ion-input>
+						<ion-label position="floating">Nom du pouvoir</ion-label>
+						<ion-input v-model="power.name" required></ion-input>
 					</ion-item>
 					<ion-item>
-						<ion-label position="floating">Nom réel</ion-label>
-						<ion-input v-model="newHero.realName" required></ion-input>
+						<ion-label>Type de pouvoir</ion-label>
+						<ion-select v-model="power.type" :items="[1, 2, 3, 4, 5, 6, 7]" required></ion-select>
 					</ion-item>
-					<div v-for="(power, index) in newHero.powers" :key="index">
-						<ion-item>
-							<ion-label position="floating">Nom du pouvoir</ion-label>
-							<ion-input v-model="power.name" required></ion-input>
-						</ion-item>
-						<ion-item>
-							<ion-label>Type de pouvoir</ion-label>
-							<ion-select v-model="power.type" :items="[1, 2, 3, 4, 5, 6, 7]" required></ion-select>
-						</ion-item>
-						<ion-item>
-							<ion-label>Niveau</ion-label>
-							<ion-range v-model="power.level" :min="0" :max="100" pin></ion-range>
-						</ion-item>
-						<ion-button color="danger" @click="removePower(index)">Supprimer</ion-button>
-					</div>
-					<ion-button expand="full" color="green" @click="addPower">Ajouter un pouvoir</ion-button>
-					<ion-button expand="full" @click="addMember">Ajouter</ion-button>
-					<ion-button expand="full" fill="clear" @click="addMemberDialog = false">Annuler</ion-button>
-				</ion-content>
-			</ion-modal>
-		</ion-content>
-	</ion-page>
+					<ion-item>
+						<ion-label>Niveau</ion-label>
+						<ion-range v-model="power.level" :min="0" :max="100" pin></ion-range>
+					</ion-item>
+					<ion-button color="danger" @click="removePower(index)">Supprimer</ion-button>
+				</div>
+				<ion-button expand="full" color="green" @click="addPower">Ajouter un pouvoir</ion-button>
+				<ion-button expand="full" @click="addMember">Ajouter</ion-button>
+				<ion-button expand="full" fill="clear" @click="addMemberDialog = false">Annuler</ion-button>
+			</ion-content>
+		</ion-modal>
+	</ion-content>
 </template>
 
 <script setup lang="ts">

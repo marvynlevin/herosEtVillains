@@ -1,59 +1,58 @@
 <template>
-	<ion-page>
-		<ion-header>
-			<ion-toolbar>
-				<ion-title>Inscription</ion-title>
-			</ion-toolbar>
-		</ion-header>
-		<ion-content class="ion-padding">
-			<ion-card>
-				<ion-card-content>
-					<ion-item>
-						<ion-label position="floating">Login</ion-label>
-						<ion-input v-model="login" type="text" :rules="loginRules"></ion-input>
-					</ion-item>
-					<ion-item>
-						<ion-label position="floating">Mot de passe</ion-label>
-						<ion-input v-model="password" type="password" :rules="passwordRules"></ion-input>
-					</ion-item>
-					<ion-item>
-						<ion-label position="floating">Nom du héro</ion-label>
-						<ion-input v-model="hero" type="text" :rules="heroRules"></ion-input>
-					</ion-item>
-					<vue-recaptcha
-							ref="recaptcha"
-							:sitekey="captchaSiteKey"
-							@verify="onCaptchaVerified"
-							@expired="onCaptchaExpired"
-							@error="onCaptchaError"
-					/>
-					<ion-button
-							expand="full"
-							@click="handleRegister"
-							:loading="loading"
-							:disabled="!formValid || !captchaVerified"
-					>
-						<span v-if="loading">Chargement...</span>
-						<span v-else>S'inscrire</span>
-					</ion-button>
-					<ion-alert
-							v-if="error"
-							color="danger"
-							:message="error"
-							:dismissible="true"
-							@ionDismiss="error = null"
-					></ion-alert>
-				</ion-card-content>
-			</ion-card>
-		</ion-content>
-	</ion-page>
+	<ion-header>
+		<ion-toolbar>
+			<ion-title>Inscription</ion-title>
+		</ion-toolbar>
+	</ion-header>
+	<ion-content class="ion-padding">
+		<ion-card>
+			<ion-card-content>
+				<ion-item>
+					<ion-label position="floating">Login</ion-label>
+					<ion-input v-model="login" type="text" :rules="loginRules"></ion-input>
+				</ion-item>
+				<ion-item>
+					<ion-label position="floating">Mot de passe</ion-label>
+					<ion-input v-model="password" type="password" :rules="passwordRules"></ion-input>
+				</ion-item>
+				<ion-item>
+					<ion-label position="floating">Nom du héro</ion-label>
+					<ion-input v-model="hero" type="text" :rules="heroRules"></ion-input>
+				</ion-item>
+				<challenge-v2
+						ref="recaptcha"
+						:sitekey="captchaSiteKey"
+						@verify="onCaptchaVerified"
+						@expired="onCaptchaExpired"
+						@error="onCaptchaError"
+				/>
+				<ion-button
+						expand="full"
+						@click="handleRegister"
+						:loading="loading"
+						:disabled="!formValid || !captchaVerified"
+				>
+					<span v-if="loading">Chargement...</span>
+					<span v-else>S'inscrire</span>
+				</ion-button>
+				<ion-alert
+						v-if="error"
+						color="danger"
+						:message="error"
+						:dismissible="true"
+						@ionDismiss="error = null"
+				></ion-alert>
+			</ion-card-content>
+		</ion-card>
+	</ion-content>
 </template>
 
 <script setup lang="ts">
 import {ref, computed, watch} from 'vue';
 import {useRouter} from 'vue-router';
 import {AuthService} from '@/services/auth.service';
-import {VueRecaptcha} from 'vue-recaptcha';
+import {ChallengeV2} from 'vue-recaptcha'
+
 import config from '@/commons/config';
 import {
 	IonPage,

@@ -1,31 +1,29 @@
 <template>
-	<ion-page>
-		<ion-header>
-			<ion-toolbar>
-				<ion-title>Modifier les informations de mon héros</ion-title>
-			</ion-toolbar>
-		</ion-header>
-		<ion-content class="ion-padding">
-			<ion-item>
-				<ion-label position="floating">Alias</ion-label>
-				<ion-input v-model="hero.alias" required></ion-input>
-			</ion-item>
-			<ion-item>
-				<ion-label position="floating">Prénom</ion-label>
-				<ion-input v-model="hero.firstname" required></ion-input>
-			</ion-item>
-			<ion-item>
-				<ion-label position="floating">Nom</ion-label>
-				<ion-input v-model="hero.lastname" required></ion-input>
-			</ion-item>
-			<ion-item>
-				<ion-label position="floating">Pouvoir</ion-label>
-				<ion-input v-model="hero.power" required></ion-input>
-			</ion-item>
-			<ion-button expand="full" @click="updateHero" :loading="loading">Modifier</ion-button>
-			<div v-if="error" class="error-message">{{ error }}</div>
-		</ion-content>
-	</ion-page>
+	<ion-header>
+		<ion-toolbar>
+			<ion-title>Modifier les informations de mon héros</ion-title>
+		</ion-toolbar>
+	</ion-header>
+	<ion-content class="ion-padding">
+		<ion-item>
+			<ion-label position="floating">Alias</ion-label>
+			<ion-input v-model="hero.alias" required></ion-input>
+		</ion-item>
+		<ion-item>
+			<ion-label position="floating">Prénom</ion-label>
+			<ion-input v-model="hero.firstname" required></ion-input>
+		</ion-item>
+		<ion-item>
+			<ion-label position="floating">Nom</ion-label>
+			<ion-input v-model="hero.lastname" required></ion-input>
+		</ion-item>
+		<ion-item>
+			<ion-label position="floating">Pouvoir</ion-label>
+			<ion-input v-model="hero.power" required></ion-input>
+		</ion-item>
+		<ion-button expand="full" @click="updateHero" :loading="loading">Modifier</ion-button>
+		<div v-if="error" class="error-message">{{ error }}</div>
+	</ion-content>
 </template>
 
 <script setup lang="ts">
@@ -59,7 +57,7 @@ onMounted(async () => {
 	try {
 		const user = await AuthService.getUser(localStorage.getItem('login')!);
 		const heroData = await getHeroById(user.data.heroId, "");
-		hero.value = heroData[0];
+		hero.value = (heroData as unknown as Array<any>)[0];
 	} catch (err: any) {
 		error.value = err.message;
 	}

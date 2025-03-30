@@ -1,17 +1,15 @@
 <template>
-	<ion-page>
-		<ion-header>
-			<ion-toolbar>
-				<ion-title>Accueil</ion-title>
-			</ion-toolbar>
-		</ion-header>
-		<ion-content class="ion-padding">
-			<h1>Bienvenue sur la page d'accueil</h1>
-			<p>Ceci est la page d'accueil de votre application. Vous pouvez commencer à naviguer en utilisant les liens
-				ci-dessous.</p>
-			<ion-button expand="full" @click="goToAuth">Aller à l'authentification</ion-button>
-		</ion-content>
-	</ion-page>
+	<ion-header>
+		<ion-toolbar>
+			<ion-title>Accueil</ion-title>
+		</ion-toolbar>
+	</ion-header>
+	<ion-content class="ion-padding">
+		<h1>Bienvenue sur la page d'accueil</h1>
+		<p>Ceci est la page d'accueil de votre application. Vous pouvez commencer à naviguer en utilisant les liens
+			ci-dessous.</p>
+		<ion-button expand="full" @click="goToAuth">Aller à l'authentification</ion-button>
+	</ion-content>
 </template>
 
 <script setup lang="ts">

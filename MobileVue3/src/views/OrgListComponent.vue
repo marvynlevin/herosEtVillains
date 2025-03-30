@@ -1,58 +1,56 @@
 <template>
-	<ion-page>
-		<ion-header>
-			<ion-toolbar>
-				<ion-title>Liste des organisations</ion-title>
-			</ion-toolbar>
-		</ion-header>
-		<ion-content class="ion-padding">
-			<ion-card>
-				<ion-card-header>
-					<ion-card-title>Liste des organisations</ion-card-title>
-				</ion-card-header>
-				<ion-card-content>
-					<ion-list v-if="getOrgs.length">
-						<ion-item v-for="org in getOrgs" :key="org._id">
-							<ion-label>{{ org.name }}</ion-label>
-							<ion-buttons slot="end">
-								<ion-button @click="selectOrg(org)">
-									<ion-icon name="eye"></ion-icon>
-									Détails
-								</ion-button>
-							</ion-buttons>
-						</ion-item>
-					</ion-list>
-					<ion-card v-else>
-						<ion-card-content>
-							<p>Aucune organisation trouvée.</p>
-						</ion-card-content>
-					</ion-card>
-					<ion-button expand="full" @click="openCreateDialog">Créer une organisation</ion-button>
-				</ion-card-content>
-			</ion-card>
+	<ion-header>
+		<ion-toolbar>
+			<ion-title>Liste des organisations</ion-title>
+		</ion-toolbar>
+	</ion-header>
+	<ion-content class="ion-padding">
+		<ion-card>
+			<ion-card-header>
+				<ion-card-title>Liste des organisations</ion-card-title>
+			</ion-card-header>
+			<ion-card-content>
+				<ion-list v-if="getOrgs.length">
+					<ion-item v-for="org in getOrgs" :key="org._id">
+						<ion-label>{{ org.name }}</ion-label>
+						<ion-buttons slot="end">
+							<ion-button @click="selectOrg(org)">
+								<ion-icon name="eye"></ion-icon>
+								Détails
+							</ion-button>
+						</ion-buttons>
+					</ion-item>
+				</ion-list>
+				<ion-card v-else>
+					<ion-card-content>
+						<p>Aucune organisation trouvée.</p>
+					</ion-card-content>
+				</ion-card>
+				<ion-button expand="full" @click="openCreateDialog">Créer une organisation</ion-button>
+			</ion-card-content>
+		</ion-card>
 
-			<ion-modal :is-open="dialog">
-				<ion-header>
-					<ion-toolbar>
-						<ion-title>Créer une nouvelle organisation</ion-title>
-					</ion-toolbar>
-				</ion-header>
-				<ion-content class="ion-padding">
-					<ion-item>
-						<ion-label position="floating">Nom de l'organisation</ion-label>
-						<ion-input v-model="newOrg.name" :error="!!error.name" :error-text="error.name" required></ion-input>
-					</ion-item>
-					<ion-item>
-						<ion-label position="floating">Phrase secrète</ion-label>
-						<ion-input v-model="newOrg.secret" type="password" :error="!!error.secret" :error-text="error.secret"
-											 required></ion-input>
-					</ion-item>
-					<ion-button expand="full" @click="handleCreateOrg">Créer</ion-button>
-					<ion-button expand="full" fill="clear" @click="closeDialog">Annuler</ion-button>
-				</ion-content>
-			</ion-modal>
-		</ion-content>
-	</ion-page>
+		<ion-modal :is-open="dialog">
+			<ion-header>
+				<ion-toolbar>
+					<ion-title>Créer une nouvelle organisation</ion-title>
+				</ion-toolbar>
+			</ion-header>
+			<ion-content class="ion-padding">
+				<ion-item>
+					<ion-label position="floating">Nom de l'organisation</ion-label>
+					<ion-input v-model="newOrg.name" :error="!!error.name" :error-text="error.name" required></ion-input>
+				</ion-item>
+				<ion-item>
+					<ion-label position="floating">Phrase secrète</ion-label>
+					<ion-input v-model="newOrg.secret" type="password" :error="!!error.secret" :error-text="error.secret"
+										 required></ion-input>
+				</ion-item>
+				<ion-button expand="full" @click="handleCreateOrg">Créer</ion-button>
+				<ion-button expand="full" fill="clear" @click="closeDialog">Annuler</ion-button>
+			</ion-content>
+		</ion-modal>
+	</ion-content>
 </template>
 
 <script setup lang="ts">

@@ -17,6 +17,9 @@ export interface Hero {
     secretIdentity: string;
     powers: string[];
     team: string;
+    firstname?: string,
+    lastname?: string,
+    power?: string
 }
 
 export async function getAllHeroes(): Promise<{ error: number; data: any }> {

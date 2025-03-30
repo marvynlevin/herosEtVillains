@@ -1,34 +1,32 @@
 <template>
-	<ion-page>
-		<ion-header>
-			<ion-toolbar>
-				<ion-title>Authentification</ion-title>
-			</ion-toolbar>
-		</ion-header>
-		<ion-content class="ion-padding">
-			<ion-card>
-				<ion-card-content>
-					<ion-item>
-						<ion-label position="floating">Login</ion-label>
-						<ion-input v-model="login" type="text" :rules="loginRules"></ion-input>
-					</ion-item>
-					<ion-item>
-						<ion-label position="floating">Mot de passe</ion-label>
-						<ion-input v-model="password" type="password" :rules="passwordRules"></ion-input>
-					</ion-item>
-					<ion-button expand="full" @click="handleLogin" :loading="loading" :disabled="!formValid">
-						<span v-if="loading">Chargement...</span>
-						<span v-else>Se connecter</span>
-					</ion-button>
-					<ion-alert v-if="error" color="danger" :message="error" :dismissible="true"
-										 @ionDismiss="error = null"></ion-alert>
-				</ion-card-content>
-				<ion-card-actions>
-					<ion-button expand="full" @click="goToUpdateHero">Modifier mon héros</ion-button>
-				</ion-card-actions>
-			</ion-card>
-		</ion-content>
-	</ion-page>
+	<ion-header>
+		<ion-toolbar>
+			<ion-title>Authentification</ion-title>
+		</ion-toolbar>
+	</ion-header>
+	<ion-content class="ion-padding">
+		<ion-card>
+			<ion-card-content>
+				<ion-item>
+					<ion-label position="floating">Login</ion-label>
+					<ion-input v-model="login" type="text" :rules="loginRules"></ion-input>
+				</ion-item>
+				<ion-item>
+					<ion-label position="floating">Mot de passe</ion-label>
+					<ion-input v-model="password" type="password" :rules="passwordRules"></ion-input>
+				</ion-item>
+				<ion-button expand="full" @click="handleLogin" :loading="loading" :disabled="!formValid">
+					<span v-if="loading">Chargement...</span>
+					<span v-else>Se connecter</span>
+				</ion-button>
+				<ion-alert v-if="error" color="danger" :message="error" :dismissible="true"
+									 @ionDismiss="error = null"></ion-alert>
+			</ion-card-content>
+			<ion-card-actions>
+				<ion-button expand="full" @click="goToUpdateHero">Modifier mon héros</ion-button>
+			</ion-card-actions>
+		</ion-card>
+	</ion-content>
 </template>
 
 <script setup lang="ts">

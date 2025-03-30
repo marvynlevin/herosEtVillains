@@ -1,77 +1,75 @@
 <template>
-	<ion-page>
-		<ion-header>
-			<ion-toolbar>
-				<ion-buttons slot="start">
-					<ion-back-button default-href="/orgs"></ion-back-button>
-				</ion-buttons>
-				<ion-title v-if="org">{{ org.name }}</ion-title>
-			</ion-toolbar>
-		</ion-header>
-		<ion-content class="ion-padding">
-			<ion-spinner v-if="loading" name="crescent" class="ion-text-center"></ion-spinner>
+	<ion-header>
+		<ion-toolbar>
+			<ion-buttons slot="start">
+				<ion-back-button default-href="/orgs"></ion-back-button>
+			</ion-buttons>
+			<ion-title v-if="org">{{ org.name }}</ion-title>
+		</ion-toolbar>
+	</ion-header>
+	<ion-content class="ion-padding">
+		<ion-spinner v-if="loading" name="crescent" class="ion-text-center"></ion-spinner>
 
-			<div v-if="org && !loading">
-				<ion-card>
-					<ion-card-header>
-						<ion-card-title>{{ org.name }}</ion-card-title>
-						<ion-card-subtitle>Informations de l'organisation</ion-card-subtitle>
-					</ion-card-header>
-					<ion-card-content>
-						<ion-item>
-							<ion-label><strong>Nom:</strong> {{ org.name }}</ion-label>
-						</ion-item>
-						<ion-item>
-							<ion-label><strong>Phrase secrète:</strong> {{ org.secret }}</ion-label>
-						</ion-item>
-					</ion-card-content>
-				</ion-card>
-
-				<ion-list v-if="org && org.teams && org.teams.length">
-					<ion-list-header>Équipes</ion-list-header>
-					<ion-item v-for="team in org.teams" :key="team._id">
-						<ion-label>{{ team.name }}</ion-label>
-						<ion-buttons slot="end">
-							<ion-button @click="viewTeamDetails(team)">
-								<ion-icon name="eye"></ion-icon>
-							</ion-button>
-							<ion-button color="danger" @click="confirmRemoveTeam(team)">
-								<ion-icon name="trash"></ion-icon>
-							</ion-button>
-						</ion-buttons>
+		<div v-if="org && !loading">
+			<ion-card>
+				<ion-card-header>
+					<ion-card-title>{{ org.name }}</ion-card-title>
+					<ion-card-subtitle>Informations de l'organisation</ion-card-subtitle>
+				</ion-card-header>
+				<ion-card-content>
+					<ion-item>
+						<ion-label><strong>Nom:</strong> {{ org.name }}</ion-label>
 					</ion-item>
-				</ion-list>
+					<ion-item>
+						<ion-label><strong>Phrase secrète:</strong> {{ org.secret }}</ion-label>
+					</ion-item>
+				</ion-card-content>
+			</ion-card>
 
-				<ion-card v-if="org && org.teams && org.teams.length === 0">
-					<ion-card-content>
-						<p>Aucune équipe disponible.</p>
-					</ion-card-content>
-				</ion-card>
+			<ion-list v-if="org && org.teams && org.teams.length">
+				<ion-list-header>Équipes</ion-list-header>
+				<ion-item v-for="team in org.teams" :key="team._id">
+					<ion-label>{{ team.name }}</ion-label>
+					<ion-buttons slot="end">
+						<ion-button @click="viewTeamDetails(team)">
+							<ion-icon name="eye"></ion-icon>
+						</ion-button>
+						<ion-button color="danger" @click="confirmRemoveTeam(team)">
+							<ion-icon name="trash"></ion-icon>
+						</ion-button>
+					</ion-buttons>
+				</ion-item>
+			</ion-list>
 
-				<ion-button expand="full" @click="toggleAddTeam">Ajouter une équipe</ion-button>
-				<div v-if="showAddTeam">
-					<ion-select v-model="selectedTeam" :items="availableTeams" item-text="name" item-value="_id"
-											label="Sélectionner une équipe">
-					</ion-select>
-					<ion-button :disabled="!selectedTeam" @click="addTeam">Valider</ion-button>
-					<ion-button fill="clear" @click="toggleAddTeam">Annuler</ion-button>
-				</div>
+			<ion-card v-if="org && org.teams && org.teams.length === 0">
+				<ion-card-content>
+					<p>Aucune équipe disponible.</p>
+				</ion-card-content>
+			</ion-card>
+
+			<ion-button expand="full" @click="toggleAddTeam">Ajouter une équipe</ion-button>
+			<div v-if="showAddTeam">
+				<ion-select v-model="selectedTeam" :items="availableTeams" item-text="name" item-value="_id"
+										label="Sélectionner une équipe">
+				</ion-select>
+				<ion-button :disabled="!selectedTeam" @click="addTeam">Valider</ion-button>
+				<ion-button fill="clear" @click="toggleAddTeam">Annuler</ion-button>
 			</div>
+		</div>
 
-			<ion-modal :is-open="confirmDialog">
-				<ion-header>
-					<ion-toolbar>
-						<ion-title>Confirmer la suppression</ion-title>
-					</ion-toolbar>
-				</ion-header>
-				<ion-content class="ion-padding">
-					<p>Voulez-vous vraiment supprimer cette équipe de l'organisation ?</p>
-					<ion-button color="danger" @click="removeTeam">Supprimer</ion-button>
-					<ion-button fill="clear" @click="confirmDialog = false">Annuler</ion-button>
-				</ion-content>
-			</ion-modal>
-		</ion-content>
-	</ion-page>
+		<ion-modal :is-open="confirmDialog">
+			<ion-header>
+				<ion-toolbar>
+					<ion-title>Confirmer la suppression</ion-title>
+				</ion-toolbar>
+			</ion-header>
+			<ion-content class="ion-padding">
+				<p>Voulez-vous vraiment supprimer cette équipe de l'organisation ?</p>
+				<ion-button color="danger" @click="removeTeam">Supprimer</ion-button>
+				<ion-button fill="clear" @click="confirmDialog = false">Annuler</ion-button>
+			</ion-content>
+		</ion-modal>
+	</ion-content>
 </template>
 
 <script setup lang="ts">

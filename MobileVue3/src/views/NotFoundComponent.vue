@@ -1,16 +1,14 @@
 <template>
-	<ion-page>
-		<ion-header>
-			<ion-toolbar>
-				<ion-title>404 - Page Not Found</ion-title>
-			</ion-toolbar>
-		</ion-header>
-		<ion-content class="ion-padding">
-			<h1>404 - Page Not Found</h1>
-			<p>Sorry, the page you are looking for does not exist.</p>
-			<ion-button expand="full" @click="goToHome">Go to Homepage</ion-button>
-		</ion-content>
-	</ion-page>
+	<ion-header>
+		<ion-toolbar>
+			<ion-title>404 - Page Not Found</ion-title>
+		</ion-toolbar>
+	</ion-header>
+	<ion-content class="ion-padding">
+		<ion-header>404 - Page Not Found</ion-header>
+		<ion-text>Sorry, the page you are looking for does not exist.</ion-text>
+		<ion-button expand="full" @click="goToHome">Go to Homepage</ion-button>
+	</ion-content>
 </template>
 
 <script setup lang="ts">

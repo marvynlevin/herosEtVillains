@@ -24,6 +24,7 @@
     "ionicons": "^7.0.0",
     "pinia": "^3.0.1",
     "vue": "^3.3.0",
+    "vue-recaptcha": "^3.0.0-alpha.6",
     "vue-router": "^4.2.0"
   },
   "devDependencies": {

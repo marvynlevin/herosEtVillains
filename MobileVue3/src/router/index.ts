@@ -4,10 +4,10 @@ import NotFoundComponent from '@/views/NotFoundComponent.vue';
 import {orgRoutes} from './org.router';
 import {teamRoutes} from './team.router';
 import AuthComponent from '@/views/AuthComponent.vue';
-import store from '@/store';
 import UserAuthComponent from "@/views/UserAuthComponent.vue";
 import HeroAuthUpdateComponent from "@/views/HeroAuthUpdateComponent.vue";
 import UserRegisterComponent from "@/views/UserRegisterComponent.vue";
+import {useOrgStore} from "@/store/org.store";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -47,14 +47,16 @@ const router = createRouter({
     ]
 });
 
+const orgsStore = useOrgStore();
+
 router.beforeEach((to, from, next) => {
     if (to.meta?.requiresAuth) {
-        if (store.getters['org/getOrgSecret']) {
+        if (orgsStore.currentOrgSecret) {
             next();
         } else {
             next({name: 'Auth'});
         }
-    } else if (to.name === 'Auth' && store.getters['org/getOrgSecret']) {
+    } else if (to.name === 'Auth' && orgsStore.currentOrgSecret) {
         next({name: 'Home'});
     } else {
         next();

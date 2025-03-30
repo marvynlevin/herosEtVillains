@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
 
 // Création de l'instance Axios avec une configuration par défaut
 const axiosAgent = axios.create({
@@ -9,10 +9,10 @@ const axiosAgent = axios.create({
 /**
  * Gestion centralisée des erreurs API
  * @param {string} serviceName - Nom du service pour le debug
- * @param {Object} err - Objet erreur Axios
+ * @param {AxiosError} err - Objet erreur Axios
  * @returns {Object} - Objet avec la structure { error: 1, data: message }
  */
-function handleError(serviceName, err) {
+function handleError(serviceName: string, err: AxiosError): { data: { error: number; data: any } } {
     if (err.response) {
         console.error(`[${serviceName}] API Error:`, err.response.data);
         return {
@@ -44,13 +44,14 @@ function handleError(serviceName, err) {
  * Requête GET
  * @param {string} uri - URI de l'API
  * @param {string} name - Nom du service
- * @param {Object} config - Configuration optionnelle
+ * @param {AxiosRequestConfig} config - Configuration optionnelle
  */
-async function getRequest(uri, name, config = {}) {
+async function getRequest(uri: string, name: string, config: AxiosRequestConfig = {}): Promise<{
+    data: { error: number; data: any }
+}> {
     try {
-        const response = await axiosAgent.get(uri, config);
-        return response.data;
-    } catch (err) {
+        return await axiosAgent.get(uri, config);
+    } catch (err: any) {
         return handleError(name, err);
     }
 }
@@ -58,15 +59,16 @@ async function getRequest(uri, name, config = {}) {
 /**
  * Requête POST
  * @param {string} uri - URI de l'API
- * @param {Object} data - Données envoyées
+ * @param {any} data - Données envoyées
  * @param {string} name - Nom du service
- * @param {Object} config - Configuration optionnelle
+ * @param {AxiosRequestConfig} config - Configuration optionnelle
  */
-async function postRequest(uri, data, name, config = {}) {
+async function postRequest(uri: string, data: any, name: string, config: AxiosRequestConfig = {}): Promise<{
+    data: { error: number; data: any }
+}> {
     try {
-        const response = await axiosAgent.post(uri, data, config);
-        return response.data;
-    } catch (err) {
+        return await axiosAgent.post(uri, data, config);
+    } catch (err: any) {
         return handleError(name, err);
     }
 }
@@ -74,15 +76,16 @@ async function postRequest(uri, data, name, config = {}) {
 /**
  * Requête PATCH
  * @param {string} uri - URI de l'API
- * @param {Object} data - Données envoyées
+ * @param {any} data - Données envoyées
  * @param {string} name - Nom du service
- * @param {Object} config - Configuration optionnelle
+ * @param {AxiosRequestConfig} config - Configuration optionnelle
  */
-async function patchRequest(uri, data, name, config = {}) {
+async function patchRequest(uri: string, data: any, name: string, config: AxiosRequestConfig = {}): Promise<{
+    data: { error: number; data: any }
+}> {
     try {
-        const response = await axiosAgent.patch(uri, data, config);
-        return response.data;
-    } catch (err) {
+        return await axiosAgent.patch(uri, data, config);
+    } catch (err: any) {
         return handleError(name, err);
     }
 }
@@ -90,11 +93,12 @@ async function patchRequest(uri, data, name, config = {}) {
 /**
  * Requête PUT (Ajouté pour complétude)
  */
-async function putRequest(uri, data, name, config = {}) {
+async function putRequest(uri: string, data: any, name: string, config: AxiosRequestConfig = {}): Promise<{
+    data: { error: number; data: any }
+}> {
     try {
-        const response = await axiosAgent.put(uri, data, config);
-        return response.data;
-    } catch (err) {
+        return await axiosAgent.put(uri, data, config);
+    } catch (err: any) {
         return handleError(name, err);
     }
 }
@@ -102,11 +106,12 @@ async function putRequest(uri, data, name, config = {}) {
 /**
  * Requête DELETE (Ajouté pour complétude)
  */
-async function deleteRequest(uri, name, config = {}) {
+async function deleteRequest(uri: string, name: string, config: AxiosRequestConfig = {}): Promise<{
+    data: { error: number; data: any }
+}> {
     try {
-        const response = await axiosAgent.delete(uri, config);
-        return response.data;
-    } catch (err) {
+        return await axiosAgent.delete(uri, config);
+    } catch (err: any) {
         return handleError(name, err);
     }
 }

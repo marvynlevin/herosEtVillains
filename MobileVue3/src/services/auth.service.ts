@@ -10,7 +10,7 @@ export const AuthService = {
      * @returns {Promise<any>} - Une promesse qui résout avec la réponse de l'API.
      * @throws {Error} - Si une erreur se produit pendant la requête.
      */
-    async login(login, password) {
+    async login(login: string, password: string): Promise<any> {
         try {
             const response = await postRequest(
                 `${AUTH_API_BASE_URL}/auth/signin`,
@@ -19,7 +19,7 @@ export const AuthService = {
             );
             localStorage.setItem('login', login);
             return response.data;
-        } catch (error) {
+        } catch (error: any) {
             const errorMessage =
                 error.response?.data?.data || 'Une erreur est survenue lors de la connexion.';
             throw new Error(errorMessage);
@@ -32,14 +32,14 @@ export const AuthService = {
      * @returns {Promise<any>} - Une promesse qui résout avec la réponse de l'API.
      * @throws {Error} - Si une erreur se produit pendant la requête.
      */
-    async getUser(login) {
+    async getUser(login: string): Promise<any> {
         try {
             const response = await getRequest(
                 `${AUTH_API_BASE_URL}/user/getuser/${login}`,
                 'GET_USER'
             );
             return response.data;
-        } catch (error) {
+        } catch (error: any) {
             const errorMessage =
                 error.response?.data?.data || 'Une erreur est survenue lors de la récupération de l\'utilisateur.';
             throw new Error(errorMessage);
@@ -55,7 +55,7 @@ export const AuthService = {
      * @returns {Promise<any>} - Une promesse qui résout avec la réponse de l'API.
      * @throws {Error} - Si une erreur se produit pendant la requête.
      */
-    async register(login, password, hero, captchaToken) {
+    async register(login: string, password: string, hero: string, captchaToken: string): Promise<any> {
         try {
             const response = await postRequest(
                 `${AUTH_API_BASE_URL}/user/register`,
@@ -63,7 +63,7 @@ export const AuthService = {
                 'REGISTER'
             );
             return response.data;
-        } catch (error) {
+        } catch (error: any) {
             const errorMessage =
                 error.response?.data?.data || 'Une erreur est survenue lors de l\'inscription.';
             throw new Error(errorMessage);

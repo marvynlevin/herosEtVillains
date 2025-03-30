@@ -1,0 +1,7 @@
+{
+  "name": "HerosEtVillains",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}

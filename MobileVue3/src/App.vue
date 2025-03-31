@@ -101,7 +101,8 @@ import {
 	IonLabel,
 	IonPage,
 	IonAlert,
-	IonMenu
+	IonMenu,
+	IonMenuToggle
 } from '@ionic/vue';
 import {menu} from 'ionicons/icons';
 
@@ -120,7 +121,8 @@ export default defineComponent({
 		IonLabel,
 		IonPage,
 		IonAlert,
-		IonMenu
+		IonMenu,
+		IonMenuToggle
 	},
 	setup() {
 		const router = useRouter();

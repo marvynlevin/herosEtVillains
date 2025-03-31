@@ -1,51 +1,72 @@
 <template>
 	<ion-page>
-		<ion-content :fullscreen="true">
-			<ion-header collapse="condense">
-				<ion-toolbar>
-					<ion-title size="large">Blank</ion-title>
-				</ion-toolbar>
-			</ion-header>
-
-			<div id="container">
-				<strong>Ready to create an app?</strong>
-				<p>Start with Ionic <a target="_blank" rel="noopener noreferrer"
-															 href="https://ionicframework.com/docs/components">UI Components</a></p>
+		<ion-content>
+			<div class="home">
+				<ion-title>Bienvenue sur la page d'accueil</ion-title>
+				<br>
+				<br>
+				<ion-text class="ion-padding ion-padding-vertical ion-margin-vertical">
+					Ceci est la page d'accueil de l'application. Vous pouvez commencer à naviguer en utilisant les liens
+					ci-dessous.
+				</ion-text>
+				<br>
+				<br>
+				<router-link to="/auth">Aller à l'authentification</router-link>
 			</div>
 		</ion-content>
 	</ion-page>
 </template>
 
-<script setup lang="ts">
-import {IonContent, IonHeader, IonPage, IonTitle, IonToolbar} from '@ionic/vue';
+<script lang="ts">
+import {defineComponent} from 'vue';
+import {IonPage, IonContent, IonText, IonTitle} from '@ionic/vue';
+import {useRouter} from 'vue-router';
+
+export default defineComponent({
+	name: 'HomeView',
+	components: {
+		IonPage,
+		IonContent,
+		IonText,
+		IonTitle
+	},
+	setup() {
+		const router = useRouter();
+
+		const goToAuth = () => {
+			router.push('/auth');
+		};
+
+		return {
+			goToAuth,
+		};
+	},
+});
 </script>
 
 <style scoped>
-#container {
+.home {
 	text-align: center;
-
-	position: absolute;
-	left: 0;
-	right: 0;
-	top: 50%;
-	transform: translateY(-50%);
+	margin-top: 100px;
 }
 
-#container strong {
-	font-size: 20px;
-	line-height: 26px;
+.home h1 {
+	font-size: 3rem;
+	color: #1890ff;
 }
 
-#container p {
-	font-size: 16px;
-	line-height: 22px;
-
-	color: #8c8c8c;
-
-	margin: 0;
+.home p {
+	font-size: 1.2rem;
+	color: #555;
 }
 
-#container a {
+.home a {
+	font-size: 1.1rem;
+	color: #1890ff;
 	text-decoration: none;
+}
+
+.home a:hover {
+	text-decoration: underline;
 }
 </style>

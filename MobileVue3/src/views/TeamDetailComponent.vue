@@ -101,19 +101,7 @@ import {useTeamStore} from '@/store/team.store';
 import {useOrgStore} from '@/store/org.store';
 import {useHeroStore} from '@/store/hero.store';
 import {useErrorStore} from '@/store/error.store';
-
-interface Hero {
-	_id: string;
-	publicName: string;
-	realName: string;
-	powers: Power[];
-}
-
-interface Power {
-	name: string;
-	type: number | null;
-	level: number;
-}
+import type {Hero, Power} from '@/store/hero.store'
 
 export default defineComponent({
 	components: {
@@ -203,7 +191,7 @@ export default defineComponent({
 			try {
 				const memberIds = teamMembers.value;
 				for (const id of memberIds) {
-					await heroStore.fetchHeroById({id, orgSecret: orgSecret.value});
+					await heroStore.fetchHeroById({id, orgSecret: orgSecret.value!});
 				}
 			} catch (error: any) {
 				console.error('Erreur lors du chargement des héros:', error);
@@ -224,7 +212,7 @@ export default defineComponent({
 				type: 'text',
 				value: newHero.value.realName,
 			},
-			...newHero.value.powers.flatMap((power, index) => [
+			...newHero.value.powers!.flatMap((power: any, index: number) => [
 				{
 					name: `powerName${index}`,
 					placeholder: `Nom du pouvoir ${index + 1}`,
@@ -261,7 +249,7 @@ export default defineComponent({
 				type: 'text',
 				value: editHero.value.realName,
 			},
-			...editHero.value.powers.flatMap((power, index) => [
+			...editHero.value.powers!.flatMap((power: any, index: number) => [
 				{
 					name: `powerName${index}`,
 					placeholder: `Nom du pouvoir ${index + 1}`,
@@ -288,15 +276,18 @@ export default defineComponent({
 		onMounted(async () => {
 			const teamId = route.params.id;
 			if (teamId) {
-				await teamStore.fetchTeamById(teamId);
-				await orgStore.fetchOrgById({id: orgStore.currentOrg[0]._id, secret: orgSecret.value});
+				teamStore.fetchTeamById(teamId as string);
+				await orgStore.fetchOrgById({
+					id: (orgStore.currentOrg as unknown as Array<any>)[0]!._id,
+					secret: orgSecret.value!
+				});
 				await loadHeroes();
 			}
 		});
 
 		const openAddMemberDialog = () => {
 			addMemberDialog.value = true;
-			newHero.value = {_id: '', publicName: '', realName: '', powers: [{name: '', type: null, level: 50}]}; // Reset newHero
+			newHero.value = {_id: '', publicName: '', realName: '', powers: [{name: '', type: null, level: 50}]};
 		};
 
 		const openEditMemberDialog = (member: Hero) => {
@@ -325,8 +316,11 @@ export default defineComponent({
 
 				const hero = await heroStore.createHero(heroData);
 				if (hero) {
-					await teamStore.addMemberToTeam({teamId: teamStore.currentTeam._id, heroId: hero._id});
-					await orgStore.fetchOrgById({id: orgStore.currentOrg[0]._id, secret: orgSecret.value});
+					await teamStore.addMemberToTeam({teamId: teamStore.currentTeam!._id, heroId: hero._id});
+					await orgStore.fetchOrgById({
+						id: (orgStore.currentOrg as unknown as Array<any>)[0]!._id,
+						secret: orgSecret.value!
+					});
 					await loadHeroes();
 				}
 				addMemberDialog.value = false;
@@ -354,8 +348,11 @@ export default defineComponent({
 					realName: data.realName,
 					powers: updatedPowers
 				}
-				await heroStore.updateHero({heroData: updatedHeroData, orgSecret: orgSecret.value});
-				await orgStore.fetchOrgById({id: orgStore.currentOrg[0]._id, secret: orgSecret.value});
+				await heroStore.updateHero({heroData: updatedHeroData as any, orgSecret: orgSecret.value!});
+				await orgStore.fetchOrgById({
+					id: (orgStore.currentOrg as unknown as Array<any>)[0]._id,
+					secret: orgSecret.value!
+				});
 				await loadHeroes();
 				editMemberDialog.value = false;
 			} catch (error: any) {
@@ -373,10 +370,13 @@ export default defineComponent({
 			try {
 				if (memberToDelete.value && memberToDelete.value._id) {
 					await teamStore.removeMemberFromTeam({
-						teamId: teamStore.currentTeam._id,
+						teamId: teamStore.currentTeam!._id,
 						heroId: memberToDelete.value._id,
 					});
-					await orgStore.fetchOrgById({id: orgStore.currentOrg[0]._id, secret: orgSecret.value});
+					await orgStore.fetchOrgById({
+						id: (orgStore.currentOrg as unknown as Array<any>)[0]._id,
+						secret: orgSecret.value!
+					});
 					await loadHeroes();
 					deleteDialog.value = false;
 				}

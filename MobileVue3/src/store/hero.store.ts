@@ -1,18 +1,18 @@
 import {defineStore} from 'pinia';
-import {getAllHeroes, getHeroById, createHero, updateHero} from '@/services/hero.service';
+import {createHero, getAllHeroes, getHeroById, updateHero} from '@/services/hero.service';
 import {useErrorStore} from './error.store'
 
-interface Hero {
+export interface Hero {
     _id: string;
     publicName: string;
     realName?: string;
     powers?: Power[];
 }
 
-interface Power {
+export interface Power {
     _id?: string;
     name: string;
-    type: number;
+    type: number | null;
     level: number;
 }
 
@@ -33,8 +33,7 @@ export const useHeroStore = defineStore('hero', {
             this.loading = true;
             const errorStore = useErrorStore();
             try {
-                const heroes = await getAllHeroes();
-                this.heroesAliases = heroes;
+                this.heroesAliases = await getAllHeroes();
             } catch (error: any) {
                 errorStore.setError(error.message);
             } finally {

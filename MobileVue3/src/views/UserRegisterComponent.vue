@@ -140,7 +140,6 @@ export default defineComponent({
 			loading.value = true;
 			error.value = null;
 			try {
-				// Inclure la vérification captcha
 				if (!captchaVerified.value) {
 					error.value = 'Veuillez vérifier que vous n\'êtes pas un robot.';
 					return;

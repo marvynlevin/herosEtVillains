@@ -38,7 +38,7 @@ export const useTeamStore = defineStore('team', {
             }
         },
 
-        async createTeam(teamData: Omit<Team, '_id' | 'members'>) {
+        async createTeam(teamData: { name: string }) {
             this.loading = true;
             const errorStore = useErrorStore();
             try {
@@ -89,6 +89,9 @@ export const useTeamStore = defineStore('team', {
                 this.loading = false;
             }
         },
+        fetchTeamById(teamId: string) {
+            return this.teams.find(t => t._id === teamId)
+        }
     },
     getters: {
         getTeams: (state) => state.teams,

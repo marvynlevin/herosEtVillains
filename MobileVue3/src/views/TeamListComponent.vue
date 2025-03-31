@@ -11,7 +11,7 @@
 				</ion-item>
 
 				<ion-list v-else>
-					<ion-item v-for="team in teams" :key="team.id" @click="selectTeam(team)">
+					<ion-item v-for="team in teams" :key="team._id" @click="selectTeam(team)">
 						<ion-label>{{ team.name }}</ion-label>
 						<ion-button slot="end" color="primary">
 							Sélectionner

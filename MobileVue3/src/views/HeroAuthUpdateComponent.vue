@@ -53,6 +53,7 @@ import {
 } from '@ionic/vue';
 import AuthService from '@/services/auth.service';
 import {getHeroById, updateAuthHero} from '@/services/hero.service';
+import {useOrgStore} from "@/store/org.store";
 
 interface Hero {
 	alias: string;
@@ -86,11 +87,12 @@ export default defineComponent({
 		});
 		const loading = ref(false);
 		const error = ref<string | null>(null);
+		const orgStore = useOrgStore();
 
 		onMounted(async () => {
 			try {
 				const user: any = await AuthService.getUser(localStorage.getItem('login') || '');
-				hero.value = await getHeroById(user.data.heroId);
+				hero.value = await getHeroById(user.data.heroId, orgStore.orgSecret!);
 			} catch (err: any) {
 				error.value = err.message;
 			}

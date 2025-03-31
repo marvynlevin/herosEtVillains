@@ -6,6 +6,8 @@ import UserAuthComponent from "@/views/UserAuthComponent.vue";
 import {orgRoutes} from "@/router/org.router";
 import UserRegisterComponent from "@/views/UserRegisterComponent.vue";
 import NotFoundComponent from "@/views/NotFoundComponent.vue";
+import HeroAuthUpdateComponent from "@/views/HeroAuthUpdateComponent.vue";
+import {teamRoutes} from "@/router/team.router";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -32,7 +34,13 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Register',
         component: UserRegisterComponent
     },
+    {
+        path: '/updatehero',
+        name: 'HeroAuthUpdate',
+        component: HeroAuthUpdateComponent
+    },
     ...orgRoutes,
+    ...teamRoutes,
     {
         path: '/:pathMatch(.*)*',
         name: '404',

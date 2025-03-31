@@ -1,12 +1,12 @@
-// import OrgListComponent from '@/views/OrgListComponent.vue';
+import OrgListComponent from '@/views/OrgListComponent.vue';
 // import OrgDetailComponent from '@/views/OrgDetailComponent.vue';
 
 export const orgRoutes = [
-    // {
-    //     path: '/orgs',
-    //     name: 'OrgList',
-    //     component: OrgListComponent,
-    // },
+    {
+        path: '/orgs',
+        name: 'OrgList',
+        component: OrgListComponent,
+    },
     // {
     //     path: '/orgs/:id',
     //     name: 'OrgDetail',

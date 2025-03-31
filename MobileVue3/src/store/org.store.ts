@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {getAllOrgs, getOrgById, addTeamToOrg, removeTeamFromOrg, createOrg} from '@/services/org.service';
+import {addTeamToOrg, createOrg, getAllOrgs, getOrgById, removeTeamFromOrg} from '@/services/org.service';
 import {useErrorStore} from './error.store';
 
 interface Organization {
@@ -37,8 +37,7 @@ export const useOrgStore = defineStore('org', {
             this.loading = true;
             const errorStore = useErrorStore();
             try {
-                const orgs = await getAllOrgs();
-                this.orgs = orgs;
+                this.orgs = await getAllOrgs();
             } catch (error: any) {
                 errorStore.setError(error.message);
             } finally {
@@ -46,7 +45,7 @@ export const useOrgStore = defineStore('org', {
             }
         },
 
-        async createOrg(orgData: Omit<Organization, '_id'>) {
+        async createOrg(orgData: { name: string, secret: string }) {
             this.loading = true;
             const errorStore = useErrorStore();
             try {
@@ -54,6 +53,7 @@ export const useOrgStore = defineStore('org', {
                 this.orgs.push(newOrg);
                 this.currentOrg = newOrg;
                 this.orgSecret = orgData.secret ?? null;
+                return newOrg
             } catch (error: any) {
                 errorStore.setError(error.message);
             } finally {

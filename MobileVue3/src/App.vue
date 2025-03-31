@@ -7,10 +7,13 @@
 						<ion-icon :icon="menu" style="width: 25px; height: 25px;"></ion-icon>
 					</ion-menu-toggle>
 				</ion-buttons>
-				<ion-title>Héros et Villains</ion-title>
+				<router-link to="/" style="text-decoration: none;">
+					<ion-title>Héros et Villains</ion-title>
+				</router-link>
 				<ion-buttons slot="end">
 					<ion-button v-if="!isLoggedIn" @click="goToLogin">Se connecter</ion-button>
 					<ion-button v-else @click="logout">Se déconnecter</ion-button>
+
 					<ion-button @click="openSecretDialog">Phrase secrète</ion-button>
 					<ion-button v-if="!isLoggedIn" @click="goToRegister">S'inscrire</ion-button>
 				</ion-buttons>

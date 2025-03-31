@@ -34,10 +34,16 @@ import '@ionic/vue/css/palettes/dark.system.css';
 /* Theme variables */
 import './theme/variables.css';
 import {createPinia} from "pinia";
+import {VueRecaptchaPlugin} from "vue-recaptcha/head";
+import config from "@/commons/config";
 
 const app = createApp(App)
     .use(IonicVue)
     .use(createPinia())
+    .use(VueRecaptchaPlugin, {
+        v2SiteKey: config.captchaSiteKey,
+        v3SiteKey: config.captchaSiteKey
+    })
     .use(router);
 
 router.isReady().then(() => {

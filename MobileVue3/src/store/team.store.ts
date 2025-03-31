@@ -23,6 +23,9 @@ export const useTeamStore = defineStore('team', {
         loading: false,
     }),
     actions: {
+        setCurrentTeam(data: any) {
+            this.currentTeam = data;
+        },
         async fetchTeams() {
             this.loading = true;
             const errorStore = useErrorStore();

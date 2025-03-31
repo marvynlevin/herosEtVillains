@@ -108,6 +108,7 @@ import {
 	IonMenuToggle
 } from '@ionic/vue';
 import {menu} from 'ionicons/icons';
+import {useRecaptchaProvider} from "vue-recaptcha";
 
 export default defineComponent({
 	components: {
@@ -128,6 +129,8 @@ export default defineComponent({
 		IonMenuToggle
 	},
 	setup() {
+		useRecaptchaProvider()
+
 		const router = useRouter();
 		const route = useRoute();
 		const orgStore = useOrgStore();

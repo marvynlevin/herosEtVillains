@@ -1,13 +1,8 @@
 import {defineStore} from 'pinia';
 
-interface ErrorState {
-    errorMessage: string | null;
-    errorDialog: boolean;
-}
-
 export const useErrorStore = defineStore('error', {
-    state: (): ErrorState => ({
-        errorMessage: null,
+    state: () => ({
+        errorMessage: null as string | null,
         errorDialog: false,
     }),
     getters: {
@@ -15,7 +10,7 @@ export const useErrorStore = defineStore('error', {
         getErrorDialog: (state) => state.errorDialog,
     },
     actions: {
-        setError(message: string | null) {
+        setError(message: string) {
             this.errorMessage = message;
             this.errorDialog = true;
         },

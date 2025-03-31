@@ -1,45 +1,49 @@
 import {defineStore} from 'pinia';
-import {
-    getAllTeams,
-    createTeam,
-    addHeroesToTeam,
-    removeHeroesFromTeam,
-    Team,
-} from "@/services/team.service";
+import {addHeroesToTeam, createTeam, getAllTeams, removeHeroesFromTeam,} from '@/services/team.service';
 import {useErrorStore} from './error.store';
 
-interface TeamState {
-    teams: Team[];
-    currentTeam: Team | null;
-    loading: boolean;
+interface Hero {
+    id: string;
+    name: string;
+    power?: string;
+    level?: number;
+}
+
+interface Team {
+    _id: string;
+    name: string;
+    members: Hero[];
+    description: string;
 }
 
 export const useTeamStore = defineStore('team', {
-    state: (): TeamState => ({
-        teams: [],
-        currentTeam: null,
+    state: () => ({
+        teams: [] as Team[],
+        currentTeam: null as Team | null,
         loading: false,
     }),
     actions: {
         async fetchTeams() {
             this.loading = true;
+            const errorStore = useErrorStore();
             try {
-                this.teams = (await getAllTeams()).data;
+                this.teams = await getAllTeams();
             } catch (error: any) {
-                useErrorStore().setError(error.message);
+                errorStore.setError(error.message);
             } finally {
                 this.loading = false;
             }
         },
 
-        async createTeam(teamData: Team) {
+        async createTeam(teamData: Omit<Team, '_id' | 'members'>) {
             this.loading = true;
+            const errorStore = useErrorStore();
             try {
-                const newTeam = (await createTeam(teamData)).data;
+                const newTeam = await createTeam(teamData);
                 this.teams.push(newTeam);
                 this.currentTeam = newTeam;
             } catch (error: any) {
-                useErrorStore().setError(error.message);
+                errorStore.setError(error.message);
             } finally {
                 this.loading = false;
             }
@@ -47,13 +51,17 @@ export const useTeamStore = defineStore('team', {
 
         async addMemberToTeam({teamId, heroId}: { teamId: string; heroId: string }) {
             this.loading = true;
+            const errorStore = useErrorStore();
             try {
-                const updatedTeam = (await addHeroesToTeam({idTeam: teamId, idHeroes: [heroId]})).data;
-                if (this.currentTeam && updatedTeam.members) {
-                    this.currentTeam.members = updatedTeam.members;
+                const updatedTeam = await addHeroesToTeam({idTeam: teamId, idHeroes: [heroId]});
+                const index = this.teams.findIndex(t => t._id === teamId);
+                if (index !== -1) {
+                    this.teams[index] = updatedTeam;
                 }
+                this.currentTeam = updatedTeam;
+
             } catch (error: any) {
-                useErrorStore().setError(error.message);
+                errorStore.setError(error.message);
             } finally {
                 this.loading = false;
             }
@@ -61,13 +69,19 @@ export const useTeamStore = defineStore('team', {
 
         async removeMemberFromTeam({teamId, heroId}: { teamId: string; heroId: string }) {
             this.loading = true;
+            const errorStore = useErrorStore();
             try {
                 await removeHeroesFromTeam({idTeam: teamId, idHeroes: [heroId]});
-                if (this.currentTeam && this.currentTeam.members) {
+                const index = this.teams.findIndex(t => t._id === teamId);
+                if (index !== -1) {
+                    this.teams[index].members = this.teams[index].members.filter(member => member.id !== heroId);
+                }
+                if (this.currentTeam?._id === teamId) {
                     this.currentTeam.members = this.currentTeam.members.filter(member => member.id !== heroId);
                 }
+
             } catch (error: any) {
-                useErrorStore().setError(error.message);
+                errorStore.setError(error.message);
             } finally {
                 this.loading = false;
             }

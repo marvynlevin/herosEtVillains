@@ -1,28 +1,42 @@
 import {defineStore} from 'pinia';
-import {getAllHeroes, getHeroById, createHero, updateHero, Hero, HeroAlias} from "@/services/hero.service";
-import {useErrorStore} from './error.store';
+import {getAllHeroes, getHeroById, createHero, updateHero} from '@/services/hero.service';
+import {useErrorStore} from './error.store'
 
-interface HeroState {
-    heroesAliases: HeroAlias[];
-    heroesDetails: Hero[];
-    currentHero: Hero | null;
-    loading: boolean;
+interface Hero {
+    _id: string;
+    publicName: string;
+    realName?: string;
+    powers?: Power[];
+}
+
+interface Power {
+    _id?: string;
+    name: string;
+    type: number;
+    level: number;
+}
+
+interface HeroDetails extends Hero {
+    realName: string;
+    powers: Power[];
 }
 
 export const useHeroStore = defineStore('hero', {
-    state: (): HeroState => ({
-        heroesAliases: [],
-        heroesDetails: [],
-        currentHero: null,
+    state: () => ({
+        heroesAliases: [] as Hero[],
+        heroesDetails: [] as HeroDetails[],
+        currentHero: null as HeroDetails | null,
         loading: false,
     }),
     actions: {
         async fetchHeroesAliases() {
             this.loading = true;
+            const errorStore = useErrorStore();
             try {
-                this.heroesAliases = (await getAllHeroes()).data;
+                const heroes = await getAllHeroes();
+                this.heroesAliases = heroes;
             } catch (error: any) {
-                useErrorStore().setError(error.message);
+                errorStore.setError(error.message);
             } finally {
                 this.loading = false;
             }
@@ -30,15 +44,13 @@ export const useHeroStore = defineStore('hero', {
 
         async fetchHeroById({id, orgSecret}: { id: string; orgSecret: string }) {
             this.loading = true;
+            const errorStore = useErrorStore();
             try {
                 const hero = await getHeroById(id, orgSecret);
-                if (hero && hero.data.length > 0) {
-                    this.setHeroDetails(hero.data[0]);
-                    return hero.data[0];
-                }
-                return null;
+                this.SET_HERO_DETAILS(hero[0]);
+                return hero[0];
             } catch (error: any) {
-                useErrorStore().setError(error.message);
+                errorStore.setError(error.message);
             } finally {
                 this.loading = false;
             }
@@ -46,39 +58,40 @@ export const useHeroStore = defineStore('hero', {
 
         async createHero(heroData: Hero) {
             this.loading = true;
+            const errorStore = useErrorStore();
             try {
-                const newHero = (await createHero(heroData)).data;
+                const newHero = await createHero(heroData);
                 this.heroesAliases.push(newHero);
                 this.currentHero = newHero;
                 return newHero;
             } catch (error: any) {
-                useErrorStore().setError(error.message);
+                errorStore.setError(error.message);
             } finally {
                 this.loading = false;
             }
         },
 
-        async updateHero({heroData, orgSecret}: { heroData: Hero; orgSecret: string }) {
+        async updateHero({heroData, orgSecret}: { heroData: HeroDetails; orgSecret: string }) {
             this.loading = true;
+            const errorStore = useErrorStore();
             try {
-                const updatedHero = (await updateHero(heroData, orgSecret)).data;
-                this.setHeroDetails(updatedHero);
+                const updatedHero = await updateHero(heroData, orgSecret);
+                this.SET_HERO_DETAILS(updatedHero);
                 this.currentHero = updatedHero;
             } catch (error: any) {
-                useErrorStore().setError(error.message);
+                errorStore.setError(error.message);
             } finally {
                 this.loading = false;
             }
         },
-
-        setHeroDetails(hero: Hero) {
+        SET_HERO_DETAILS(hero: HeroDetails) {
             const index = this.heroesDetails.findIndex(h => h._id === hero._id);
             if (index !== -1) {
                 this.heroesDetails[index] = hero;
             } else {
                 this.heroesDetails.push(hero);
             }
-        },
+        }
     },
     getters: {
         getHeroesAliases: (state) => state.heroesAliases,

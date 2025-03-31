@@ -1,68 +1,89 @@
 import {defineStore} from 'pinia';
-import {getAllOrgs, getOrgById, createOrg, addTeamToOrg, removeTeamFromOrg, Org, Team} from "@/services/org.service";
+import {getAllOrgs, getOrgById, addTeamToOrg, removeTeamFromOrg, createOrg} from '@/services/org.service';
 import {useErrorStore} from './error.store';
 
-interface OrgState {
-    orgs: Org[];
-    currentOrg: Org | null;
-    currentOrgSecret: string | null;
-    loading: boolean;
+interface Organization {
+    _id: string;
+    name: string;
+    teams: string[];
+    secret?: string;
+}
+
+interface OrganizationDetails {
+    _id: string;
+    name: string;
+    teams: TeamDetails[];
+    secret?: string;
+}
+
+interface TeamDetails {
+    _id: string;
+    name: string;
+    members: string[];
 }
 
 export const useOrgStore = defineStore('org', {
-    state: (): OrgState => ({
-        orgs: [],
-        currentOrg: null,
-        currentOrgSecret: null,
+    state: () => ({
+        orgs: [] as Organization[],
+        currentOrg: null as OrganizationDetails | null,
+        orgSecret: null as string | null,
         loading: false,
     }),
     actions: {
+        setOrgSecret(secret: string | null) {
+            this.orgSecret = secret;
+        },
         async fetchOrgs() {
             this.loading = true;
+            const errorStore = useErrorStore();
             try {
-                this.orgs = (await getAllOrgs()).data;
+                const orgs = await getAllOrgs();
+                this.orgs = orgs;
             } catch (error: any) {
-                useErrorStore().setError(error.message);
+                errorStore.setError(error.message);
             } finally {
                 this.loading = false;
             }
         },
 
-        async createOrg(orgData: Org) {
+        async createOrg(orgData: Omit<Organization, '_id'>) {
             this.loading = true;
+            const errorStore = useErrorStore();
             try {
-                const newOrg = (await createOrg(orgData)).data;
+                const newOrg = await createOrg(orgData);
                 this.orgs.push(newOrg);
                 this.currentOrg = newOrg;
-                this.currentOrgSecret = orgData.secret;
+                this.orgSecret = orgData.secret ?? null;
             } catch (error: any) {
-                useErrorStore().setError(error.message);
+                errorStore.setError(error.message);
             } finally {
                 this.loading = false;
             }
         },
 
-        async addTeamToOrg(teamData: Team) {
+        async addTeamToOrg(teamData: { idTeam: string }) {
             this.loading = true;
+            const errorStore = useErrorStore();
             try {
-                await addTeamToOrg(teamData, this.currentOrgSecret!);
-                const updatedOrg = await getOrgById((this.currentOrg! as unknown as Array<any>)[0]._id, this.currentOrgSecret!);
+                await addTeamToOrg(teamData, this.orgSecret!);
+                const updatedOrg = await getOrgById(this.currentOrg!._id, this.orgSecret!);
                 this.currentOrg = updatedOrg.data;
             } catch (error: any) {
-                useErrorStore().setError(error.message);
+                errorStore.setError(error.message);
             } finally {
                 this.loading = false;
             }
         },
 
-        async removeTeamFromOrg(teamData: Team) {
+        async removeTeamFromOrg(teamData: { idTeam: string }) {
             this.loading = true;
+            const errorStore = useErrorStore();
             try {
-                await removeTeamFromOrg(teamData, this.currentOrgSecret!);
-                const updatedOrg = await getOrgById((this.currentOrg! as unknown as Array<any>)[0]._id, this.currentOrgSecret!);
+                await removeTeamFromOrg(teamData, this.orgSecret!);
+                const updatedOrg = await getOrgById(this.currentOrg!._id, this.orgSecret!);
                 this.currentOrg = updatedOrg.data;
             } catch (error: any) {
-                useErrorStore().setError(error.message);
+                errorStore.setError(error.message);
             } finally {
                 this.loading = false;
             }
@@ -70,12 +91,13 @@ export const useOrgStore = defineStore('org', {
 
         async fetchOrgById({id, secret}: { id: string; secret: string }) {
             this.loading = true;
+            const errorStore = useErrorStore();
             try {
                 const org = await getOrgById(id, secret);
                 this.currentOrg = org.data;
-                this.currentOrgSecret = secret;
+                this.orgSecret = secret;
             } catch (error: any) {
-                useErrorStore().setError(error.message);
+                errorStore.setError(error.message);
             } finally {
                 this.loading = false;
             }
@@ -84,7 +106,7 @@ export const useOrgStore = defineStore('org', {
     getters: {
         getOrgs: (state) => state.orgs,
         getCurrentOrg: (state) => state.currentOrg,
-        getOrgSecret: (state) => state.currentOrgSecret,
+        getOrgSecret: (state) => state.orgSecret,
         isOrgLoading: (state) => state.loading,
     },
 });

@@ -1,4 +1,4 @@
-import {getRequest, postRequest, patchRequest} from "@/services/axios.service";
+import {getRequest, patchRequest, postRequest, useErrorStore} from '@/services/axios.service';
 
 //
 //
@@ -6,66 +6,59 @@ import {getRequest, postRequest, patchRequest} from "@/services/axios.service";
 //
 //
 
-export interface Org {
-    _id: string;
-    name: string;
-    secret: string;
-    teams: string[];
-}
-
-export interface Team {
-    idTeam: string;
-    idOrg: string;
-}
-
-export async function getAllOrgs(): Promise<{ error: number; data: any }> {
+export async function getAllOrgs(): Promise<any> {
+    const errorStore = useErrorStore();
     try {
         const response = await getRequest('/herocorp/orgs/get', 'GETALLORGS');
         return response.data;
     } catch (error: any) {
-        const errorMessage = error.response?.data?.data || 'Une erreur est survenue lors de la récupération des organisations.';
-        throw new Error(errorMessage);
+        errorStore.setError(error?.message)
+        return error;
     }
 }
 
-export async function createOrg(orgData: Omit<Org, '_id' | 'teams'>): Promise<{ error: number; data: any }> {
+export async function createOrg(orgData: any): Promise<any> {
+    const errorStore = useErrorStore();
     try {
         const response = await postRequest('/herocorp/orgs/create', orgData, 'CREATEORG');
         return response.data;
     } catch (error: any) {
-        const errorMessage = error.response?.data?.data || 'Une erreur est survenue lors de la création de l\'organisation.';
-        throw new Error(errorMessage);
+        errorStore.setError(error?.message)
+        return error;
     }
 }
 
-export async function addTeamToOrg(orgData: Team, orgSecret: string): Promise<any> {
+export async function addTeamToOrg(orgData: any, orgSecret: string): Promise<any> {
+    const errorStore = useErrorStore();
     try {
         const config = {headers: {'org-secret': orgSecret}};
         const response = await patchRequest('/herocorp/orgs/addteam', orgData, 'ADDTEAMTOORG', config);
         return response.data;
     } catch (error: any) {
-        const errorMessage = error.response?.data?.data || 'Une erreur est survenue lors de l\'ajout de l\'équipe à l\'organisation.';
-        throw new Error(errorMessage);
+        errorStore.setError(error?.message)
+        return error;
     }
 }
 
-export async function removeTeamFromOrg(orgData: Team, orgSecret: string): Promise<any> {
+export async function removeTeamFromOrg(orgData: any, orgSecret: string): Promise<any> {
+    const errorStore = useErrorStore();
     try {
         const config = {headers: {'org-secret': orgSecret}};
         const response = await patchRequest('/herocorp/orgs/removeteam', orgData, 'REMOVETEAMFROMORG', config);
         return response.data;
     } catch (error: any) {
-        const errorMessage = error.response?.data?.data || 'Une erreur est survenue lors de la suppression de l\'équipe de l\'organisation.';
-        throw new Error(errorMessage);
+        errorStore.setError(error?.message)
+        return error;
     }
 }
 
 export async function getOrgById(id: string, orgSecret: string): Promise<any> {
+    const errorStore = useErrorStore();
     try {
-        const response = await getRequest(`/herocorp/orgs/getbyid/${id}`, 'GETORG_BYID', {headers: {'org-secret': orgSecret}});
-        return response;
+        const config = {headers: {'org-secret': orgSecret}};
+        return await getRequest(`/herocorp/orgs/getbyid/${id}`, 'GETORG_BYID', config);
     } catch (error: any) {
-        const errorMessage = error.response?.data?.data || 'Une erreur est survenue lors de la récupération de l\'organisation.';
-        throw new Error(errorMessage);
+        errorStore.setError(error?.message)
+        return error;
     }
 }

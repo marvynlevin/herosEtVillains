@@ -1,119 +1,87 @@
-import axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
+import axios, {AxiosInstance, AxiosResponse, AxiosError, AxiosRequestConfig} from 'axios';
+import {defineStore} from 'pinia';
 
-// Création de l'instance Axios avec une configuration par défaut
-const axiosAgent = axios.create({
+interface ApiResponse<T> {
+    error?: number;
+    status?: number;
+    data: T | string;
+}
+
+const axiosAgent: AxiosInstance = axios.create({
     baseURL: 'https://apidemo.iut-bm.univ-fcomte.fr',
-    timeout: 10000, // Timeout de 10 secondes
+    timeout: 10000,
 });
 
-/**
- * Gestion centralisée des erreurs API
- * @param {string} serviceName - Nom du service pour le debug
- * @param {AxiosError} err - Objet erreur Axios
- * @returns {Object} - Objet avec la structure { error: 1, data: message }
- */
-function handleError(serviceName: string, err: AxiosError): { data: { error: number; data: any } } {
-    if (err.response) {
-        console.error(`[${serviceName}] API Error:`, err.response.data);
-        return {
-            data: {
+const useErrorStore = defineStore('error', {
+    state: () => ({
+        error: null as ApiResponse<any> | null,
+    }),
+    actions: {
+        setError(error: ApiResponse<any> | null) {
+            this.error = error;
+        },
+        clearError() {
+            this.error = null;
+        },
+    },
+});
+
+async function handleRequest<T>(
+    request: Promise<AxiosResponse<ApiResponse<T>>>,
+    serviceName: string
+): Promise<ApiResponse<T>> {
+    const errorStore = useErrorStore();
+    try {
+        const response = await request;
+        errorStore.clearError();
+        return response.data;
+    } catch (err) {
+        const error = err as AxiosError;
+        let apiError: ApiResponse<any>;
+
+        if (error.response) {
+            console.error(`[${serviceName}] API Error:`, error.response.data);
+            apiError = {
+                data: error.response.data,
                 error: 1,
-                data: err.response.data
-            }
-        };
-    } else if (err.request) {
-        console.error(`[${serviceName}] Network Error:`, err.request);
-        return {
-            data: {
+                status: error.response.status,
+            };
+        } else if (error.request) {
+            console.error(`[${serviceName}] Network Error:`, error.request);
+            apiError = {
+                data: 'Le serveur est injoignable ou l\'URL demandée n\'existe pas',
                 error: 1,
-                data: "Le serveur est injoignable ou l'URL demandée n'existe pas"
-            }
-        };
-    } else {
-        console.error(`[${serviceName}] Unknown Error:`, err.message);
-        return {
-            data: {
+            };
+        } else {
+            console.error(`[${serviceName}] Unknown Error:`, error.message);
+            apiError = {
+                data: 'Erreur inconnue',
                 error: 1,
-                data: "Erreur inconnue"
-            }
-        };
+            };
+        }
+        errorStore.setError(apiError);
+        return {data: apiError.data, error: apiError.error, status: apiError.status};
     }
 }
 
-/**
- * Requête GET
- * @param {string} uri - URI de l'API
- * @param {string} name - Nom du service
- * @param {AxiosRequestConfig} config - Configuration optionnelle
- */
-async function getRequest(uri: string, name: string, config: AxiosRequestConfig = {}): Promise<{
-    data: { error: number; data: any }
-}> {
-    try {
-        return await axiosAgent.get(uri, config);
-    } catch (err: any) {
-        return handleError(name, err);
-    }
+async function getRequest<T>(uri: string, name: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+    return handleRequest<T>(axiosAgent.get<ApiResponse<T>>(uri, config), name);
 }
 
-/**
- * Requête POST
- * @param {string} uri - URI de l'API
- * @param {any} data - Données envoyées
- * @param {string} name - Nom du service
- * @param {AxiosRequestConfig} config - Configuration optionnelle
- */
-async function postRequest(uri: string, data: any, name: string, config: AxiosRequestConfig = {}): Promise<{
-    data: { error: number; data: any }
-}> {
-    try {
-        return await axiosAgent.post(uri, data, config);
-    } catch (err: any) {
-        return handleError(name, err);
-    }
+async function postRequest<T>(uri: string, data: any, name: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+    return handleRequest<T>(axiosAgent.post<ApiResponse<T>>(uri, data, config), name);
 }
 
-/**
- * Requête PATCH
- * @param {string} uri - URI de l'API
- * @param {any} data - Données envoyées
- * @param {string} name - Nom du service
- * @param {AxiosRequestConfig} config - Configuration optionnelle
- */
-async function patchRequest(uri: string, data: any, name: string, config: AxiosRequestConfig = {}): Promise<{
-    data: { error: number; data: any }
-}> {
-    try {
-        return await axiosAgent.patch(uri, data, config);
-    } catch (err: any) {
-        return handleError(name, err);
-    }
+async function patchRequest<T>(uri: string, data: any, name: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+    return handleRequest<T>(axiosAgent.patch<ApiResponse<T>>(uri, data, config), name);
 }
 
-/**
- * Requête PUT (Ajouté pour complétude)
- */
-async function putRequest(uri: string, data: any, name: string, config: AxiosRequestConfig = {}): Promise<{
-    data: { error: number; data: any }
-}> {
-    try {
-        return await axiosAgent.put(uri, data, config);
-    } catch (err: any) {
-        return handleError(name, err);
-    }
+async function putRequest<T>(uri: string, data: any, name: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+    return handleRequest<T>(axiosAgent.put<ApiResponse<T>>(uri, data, config), name);
 }
 
-/**
- * Requête DELETE (Ajouté pour complétude)
- */
-async function deleteRequest(uri: string, name: string, config: AxiosRequestConfig = {}): Promise<{
-    data: { error: number; data: any }
-}> {
-    try {
-        return await axiosAgent.delete(uri, config);
-    } catch (err: any) {
-        return handleError(name, err);
-    }
+async function deleteRequest<T>(uri: string, name: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+    return handleRequest<T>(axiosAgent.delete<ApiResponse<T>>(uri, config), name);
 }
 
 export {
@@ -121,5 +89,6 @@ export {
     postRequest,
     patchRequest,
     putRequest,
-    deleteRequest
+    deleteRequest,
+    useErrorStore,
 };

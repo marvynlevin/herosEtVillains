@@ -5,6 +5,7 @@ import AuthComponent from "@/views/AuthComponent.vue";
 import UserAuthComponent from "@/views/UserAuthComponent.vue";
 import {orgRoutes} from "@/router/org.router";
 import UserRegisterComponent from "@/views/UserRegisterComponent.vue";
+import NotFoundComponent from "@/views/NotFoundComponent.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -31,7 +32,12 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Register',
         component: UserRegisterComponent
     },
-    ...orgRoutes
+    ...orgRoutes,
+    {
+        path: '/:pathMatch(.*)*',
+        name: '404',
+        component: NotFoundComponent,
+    },
 ]
 
 const router = createRouter({

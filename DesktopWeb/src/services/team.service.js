@@ -30,10 +30,10 @@ export async function createTeam(teamData) {
 export async function addHeroesToTeam(teamData) {
     try {
         const response = await patchRequest('/herocorp/teams/addheroes', teamData, 'ADDHEROSTOTEAM');
-        return response.data; // Retourne les informations de l'équipe après ajout des héros
+        return response.data;
     } catch (error) {
         const errorMessage = error.response?.data?.data || 'Une erreur est survenue lors de l\'ajout des héros à l\'équipe.';
-        throw new Error(errorMessage); // Retourne le message d'erreur
+        throw new Error(errorMessage);
     }
 }
 

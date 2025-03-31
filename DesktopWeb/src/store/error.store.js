@@ -1,4 +1,3 @@
-// store/modules/error.js
 export default {
     namespaced: true,
     state: {

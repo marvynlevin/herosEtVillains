@@ -1,6 +1,5 @@
 <template>
 	<v-app>
-		<!-- Bandeau en haut -->
 		<v-app-bar app>
 			<v-btn icon @click="drawer = !drawer">
 				<v-icon>mdi-menu</v-icon>
@@ -13,7 +12,6 @@
 			<v-btn v-if="!isLoggedIn" text @click="goToRegister">S'inscrire</v-btn>
 		</v-app-bar>
 
-		<!-- Menu (Tiroir) -->
 		<v-navigation-drawer v-model="drawer" app>
 			<v-list>
 				<v-list-item @click="goToHomePage">
@@ -34,12 +32,10 @@
 			</v-list>
 		</v-navigation-drawer>
 
-		<!-- Contenu principal -->
 		<v-main>
 			<router-view></router-view>
 		</v-main>
 
-		<!-- Saisie du secret -->
 		<v-dialog v-model="dialog" max-width="500px">
 			<v-card>
 				<v-card-title class="headline">Saisir la phrase secrète</v-card-title>
@@ -57,7 +53,6 @@
 			</v-card>
 		</v-dialog>
 
-		<!-- Gestion des erreurs -->
 		<v-dialog v-model="errorDialog" max-width="500px">
 			<v-card>
 				<v-card-title class="headline">Erreur</v-card-title>

@@ -88,7 +88,6 @@ export default {
         getHeroesAliases: (state) => state.heroesAliases,
         getCurrentHero: (state) => state.currentHero,
         isHeroLoading: (state) => state.loading,
-        getHeroError: (state) => state.error,
         getHeroesDetails: (state) => state.heroesDetails,
     },
 };

@@ -1,9 +1,7 @@
 <template>
 	<v-container>
-		<!-- Affichage du loader pendant le chargement -->
 		<v-progress-circular v-if="loading" indeterminate color="primary" class="d-block mx-auto mt-5"/>
 
-		<!-- Affichage des détails de l'organisation -->
 		<v-card v-if="org && !loading">
 			<v-card-title class="headline">{{ org.name }}</v-card-title>
 			<v-card-subtitle>Informations de l'organisation</v-card-subtitle>
@@ -12,7 +10,6 @@
 				<div><strong>Phrase secrète:</strong> {{ org.secret }}</div>
 			</v-card-text>
 
-			<!-- Tableau des équipes -->
 			<v-data-table v-if="org && org.teams && org.teams.length" :items="org.teams" :headers="teamHeaders">
 				<template v-slot:item.actions="{ item }">
 					<v-btn @click="viewTeamDetails(item)" color="blue darken-1" small class="white--text">
@@ -30,7 +27,6 @@
 				Aucune équipe disponible.
 			</v-alert>
 
-			<!-- Ajouter une équipe -->
 			<v-btn color="green" class="mt-3" @click="toggleAddTeam">Ajouter une équipe</v-btn>
 			<v-expand-transition>
 				<div v-if="showAddTeam" class="mt-2">
@@ -42,7 +38,6 @@
 			</v-expand-transition>
 		</v-card>
 
-		<!-- Boîte de confirmation pour suppression d'équipe -->
 		<v-dialog v-model="confirmDialog" max-width="500px">
 			<v-card>
 				<v-card-title>Confirmer la suppression</v-card-title>

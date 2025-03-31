@@ -1,9 +1,8 @@
 import axios from 'axios';
 
-// Création de l'instance Axios avec une configuration par défaut
 const axiosAgent = axios.create({
     baseURL: 'https://apidemo.iut-bm.univ-fcomte.fr',
-    timeout: 10000, // Timeout de 10 secondes
+    timeout: 10000,
 });
 
 /**
@@ -88,7 +87,7 @@ async function patchRequest(uri, data, name, config = {}) {
 }
 
 /**
- * Requête PUT (Ajouté pour complétude)
+ * Requête PUT
  */
 async function putRequest(uri, data, name, config = {}) {
     try {
@@ -100,7 +99,7 @@ async function putRequest(uri, data, name, config = {}) {
 }
 
 /**
- * Requête DELETE (Ajouté pour complétude)
+ * Requête DELETE
  */
 async function deleteRequest(uri, name, config = {}) {
     try {

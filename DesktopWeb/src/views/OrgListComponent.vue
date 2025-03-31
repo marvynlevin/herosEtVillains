@@ -3,12 +3,10 @@
 		<v-card class="elevation-2">
 			<v-card-title class="headline">Liste des organisations</v-card-title>
 
-			<!-- Message lorsque aucune organisation n'est trouvée -->
 			<v-alert v-if="!getOrgs.length" type="info" elevation="2">
 				Aucune organisation trouvée.
 			</v-alert>
 
-			<!-- Tableau des organisations si elles existent -->
 			<v-data-table
 					v-else
 					:headers="headers"
@@ -31,7 +29,6 @@
 			</v-card-actions>
 		</v-card>
 
-		<!-- Dialog pour créer une organisation -->
 		<v-dialog v-model="dialog" max-width="500px" persistent>
 			<v-card>
 				<v-card-title class="headline">Créer une nouvelle organisation</v-card-title>
@@ -81,27 +78,23 @@ export default {
 		...mapState('org', ['currentOrg'])
 	},
 	created() {
-		this.fetchOrgs(); // Initialiser la liste des organisations
+		this.fetchOrgs();
 	},
 	methods: {
 		...mapActions("org", ["fetchOrgs", "fetchOrgById", "createOrg", "addOrgToStore"]),
 		...mapMutations('org', ['SET_CURRENT_ORG']),
 		...mapActions('error', ['setError']),
 
-		// Sélectionner une organisation et naviguer vers ses détails
 		async selectOrg(org) {
 			try {
-				console.log("secret", `'${this.getOrgSecret}'`); // Affichage du secret
-				console.log("id", org._id); // Affichage de l'ID de l'organisation
+				console.log("secret", `'${this.getOrgSecret}'`);
+				console.log("id", org._id);
 
-				// Vérifier l'organisation par son ID et son secret
 				await this.fetchOrgById({id: org._id, secret: this.getOrgSecret});
 
-				// Vérification de la réponse pour savoir si l'organisation est valide
 				if (this.currentOrg) {
 					await this.$router.push({name: "OrgDetail", params: {id: org._id}});
 				} else {
-					// Si l'organisation ou le secret est invalide, afficher un message d'erreur ou gérer autrement
 					console.error("Erreur : secret invalide ou organisation non trouvée.");
 					await this.setError("secret invalide ou organisation non trouvée");
 				}
@@ -109,20 +102,14 @@ export default {
 				console.error("Erreur lors de la sélection :", error);
 			}
 		},
-
-		// Ouvrir le dialog pour la création
 		openCreateDialog() {
 			this.newOrg = {name: "", secret: ""};
 			this.error = {name: "", secret: ""};
 			this.dialog = true;
 		},
-
-		// Fermer le dialog
 		closeDialog() {
 			this.dialog = false;
 		},
-
-		// Créer une organisation
 		async handleCreateOrg() {
 			this.error = {name: "", secret: ""};
 
@@ -133,14 +120,11 @@ export default {
 
 			try {
 				console.log("données en entrée:", this.newOrg);
-				// Appel à la méthode pour créer l'organisation via le store
 				const createdOrg = await this.createOrg(this.newOrg);
 
-				// Ajouter directement la nouvelle organisation au store
 				await this.addOrgToStore(createdOrg);
 
 				this.dialog = false;
-				// Rafraîchir la liste des organisations en appelant fetchOrgs si nécessaire
 				await this.fetchOrgs();
 			} catch (error) {
 				console.error("Erreur lors de la création :", error);

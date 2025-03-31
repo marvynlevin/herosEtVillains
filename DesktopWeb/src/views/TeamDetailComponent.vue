@@ -10,7 +10,6 @@
 				</v-card>
 			</v-col>
 
-			<!-- Liste des membres -->
 			<v-col cols="12">
 				<v-data-table
 						v-if="teamDetails.length"
@@ -39,7 +38,6 @@
 			</v-col>
 		</v-row>
 
-		<!-- Dialog de modification de héros -->
 		<v-dialog v-model="editMemberDialog" max-width="600px">
 			<v-card>
 				<v-card-title>Modifier un Héros</v-card-title>
@@ -48,7 +46,6 @@
 						<v-text-field v-model="editHero.publicName" label="Nom public" required></v-text-field>
 						<v-text-field v-model="editHero.realName" label="Nom réel" required></v-text-field>
 
-						<!-- Liste des pouvoirs -->
 						<div v-for="(power, index) in editHero.powers" :key="index" class="power-item">
 							<v-text-field v-model="power.name" label="Nom du pouvoir" required></v-text-field>
 							<v-select
@@ -79,7 +76,6 @@
 			</v-card>
 		</v-dialog>
 
-		<!-- Dialog pour retirer un héros -->
 		<v-dialog v-model="deleteDialog" max-width="500px">
 			<v-card>
 				<v-card-title>Confirmation</v-card-title>
@@ -91,7 +87,6 @@
 			</v-card>
 		</v-dialog>
 
-		<!-- Dialog d'ajout de héros -->
 		<v-dialog v-model="addMemberDialog" max-width="600px">
 			<v-card>
 				<v-card-title>Ajouter un Héros</v-card-title>
@@ -100,7 +95,6 @@
 						<v-text-field v-model="newHero.publicName" label="Nom public" required></v-text-field>
 						<v-text-field v-model="newHero.realName" label="Nom réel" required></v-text-field>
 
-						<!-- Liste des pouvoirs -->
 						<div v-for="(power, index) in newHero.powers" :key="index" class="power-item">
 							<v-text-field v-model="power.name" label="Nom du pouvoir" required></v-text-field>
 							<v-select

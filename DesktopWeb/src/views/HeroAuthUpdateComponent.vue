@@ -36,8 +36,7 @@ export default {
 	async mounted() {
 		try {
 			const user = await AuthService.getUser(localStorage.getItem('login'));
-			const hero = await getHeroById(user.data.heroId);
-			this.hero = hero;
+			this.hero = await getHeroById(user.data.heroId);
 		} catch (error) {
 			this.error = error.message;
 		}

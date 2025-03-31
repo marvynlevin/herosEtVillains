@@ -3,12 +3,10 @@
 		<v-card class="elevation-2">
 			<v-card-title class="headline">Liste des équipes</v-card-title>
 
-			<!-- Afficher une alerte si aucune équipe n'est trouvée -->
 			<v-alert v-if="!teams.length" type="info" elevation="2">
 				Aucune équipe trouvée.
 			</v-alert>
 
-			<!-- Tableau des équipes si elles existent -->
 			<v-data-table v-else :headers="headers" :items="teams" item-key="id" class="elevation-1">
 				<template v-slot:item.actions="{ item }">
 					<v-btn @click="selectTeam(item)" color="blue darken-1" small dark class="white--text">
@@ -20,7 +18,6 @@
 			<v-btn @click="openAddTeamDialog" color="primary" class="mt-4">Créer une équipe</v-btn>
 		</v-card>
 
-		<!-- Dialog de création d'équipe -->
 		<v-dialog v-model="addTeamDialog" max-width="500px">
 			<v-card>
 				<v-card-title class="headline">Créer une nouvelle équipe</v-card-title>

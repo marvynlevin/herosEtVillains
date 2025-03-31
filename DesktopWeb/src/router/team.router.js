@@ -12,6 +12,6 @@ export const teamRoutes = [
         name: 'TeamDetail',
         meta: {requiresAuth: 1},
         component: TeamDetailComponent,
-        props: true, // Passe l'id de l'équipe à la props du composant
+        props: true,
     },
 ];

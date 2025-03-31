@@ -14,7 +14,7 @@ export async function getAllTeams(): Promise<any> {
     } catch (error: any) {
         {
             errorStore.setError(error?.message)
-            return null;
+            return error;
         }
     }
 }
@@ -27,7 +27,7 @@ export async function createTeam(teamData: any): Promise<any> {
     } catch (error: any) {
         {
             errorStore.setError(error?.message)
-            return null;
+            return error;
         }
     }
 }
@@ -39,7 +39,7 @@ export async function addHeroesToTeam(teamData: any): Promise<any> {
         return response.data;
     } catch (error: any) {
         errorStore.setError(error?.message)
-        return null;
+        return error;
     }
 }
 
@@ -49,9 +49,7 @@ export async function removeHeroesFromTeam(teamData: any): Promise<any> {
         const response = await patchRequest('/herocorp/teams/removeheroes', teamData, 'REMOVEHEROFROMTEAM');
         return response.data;
     } catch (error: any) {
-        {
-            errorStore.setError(error?.message)
-            return null;
-        }
+        errorStore.setError(error?.message)
+        return error;
     }
 }

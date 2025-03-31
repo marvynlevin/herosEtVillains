@@ -13,7 +13,7 @@ export async function getAllOrgs(): Promise<any> {
         return response.data;
     } catch (error: any) {
         errorStore.setError(error?.message)
-        return null;
+        return error;
     }
 }
 
@@ -24,7 +24,7 @@ export async function createOrg(orgData: any): Promise<any> {
         return response.data;
     } catch (error: any) {
         errorStore.setError(error?.message)
-        return null;
+        return error;
     }
 }
 
@@ -36,7 +36,7 @@ export async function addTeamToOrg(orgData: any, orgSecret: string): Promise<any
         return response.data;
     } catch (error: any) {
         errorStore.setError(error?.message)
-        return null;
+        return error;
     }
 }
 
@@ -48,7 +48,7 @@ export async function removeTeamFromOrg(orgData: any, orgSecret: string): Promis
         return response.data;
     } catch (error: any) {
         errorStore.setError(error?.message)
-        return null;
+        return error;
     }
 }
 
@@ -59,6 +59,6 @@ export async function getOrgById(id: string, orgSecret: string): Promise<any> {
         return await getRequest(`/herocorp/orgs/getbyid/${id}`, 'GETORG_BYID', config);
     } catch (error: any) {
         errorStore.setError(error?.message)
-        return null;
+        return error;
     }
 }

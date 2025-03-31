@@ -10,7 +10,6 @@ const AuthService = {
      * @returns Une promesse qui résout avec la réponse de l'API.
      */
     async login(login: string, password: string): Promise<any> {
-        const errorStore = useErrorStore();
         try {
             const response = await postRequest(
                 `${AUTH_API_BASE_URL}/auth/signin`,
@@ -20,9 +19,7 @@ const AuthService = {
             localStorage.setItem('login', login);
             return response.data;
         } catch (error: any) {
-            // L'erreur est maintenant gérée par axios.service.ts et stockée dans Pinia
-            // On ne jette plus d'erreur ici, on retourne simplement null ou un objet d'erreur
-            return null; // Ou un objet d'erreur si vous voulez un traitement différent
+            return error;
         }
     },
 
@@ -32,7 +29,6 @@ const AuthService = {
      * @returns Une promesse qui résout avec la réponse de l'API.
      */
     async getUser(login: string): Promise<any> {
-        const errorStore = useErrorStore();
         try {
             const response = await getRequest(
                 `${AUTH_API_BASE_URL}/user/getuser/${login}`,
@@ -40,7 +36,7 @@ const AuthService = {
             );
             return response.data;
         } catch (error: any) {
-            return null;
+            return error;
         }
     },
 
@@ -53,7 +49,6 @@ const AuthService = {
      * @returns Une promesse qui résout avec la réponse de l'API.
      */
     async register(login: string, password: string, hero: string, captchaToken: string): Promise<any> {
-        const errorStore = useErrorStore();
         try {
             const response = await postRequest(
                 `${AUTH_API_BASE_URL}/user/register`,
@@ -62,7 +57,7 @@ const AuthService = {
             );
             return response.data;
         } catch (error: any) {
-            return null;
+            return error;
         }
     },
 };

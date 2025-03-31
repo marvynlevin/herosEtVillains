@@ -13,7 +13,7 @@ export async function getAllHeroes(): Promise<any> {
         return response.data;
     } catch (error: any) {
         errorStore.setError(error?.message);
-        return null;
+        return error;
     }
 }
 
@@ -24,7 +24,7 @@ export async function createHero(heroData: any): Promise<any> {
         return response.data;
     } catch (error: any) {
         errorStore.setError(error?.message);
-        return null;
+        return error;
     }
 }
 
@@ -36,7 +36,7 @@ export async function updateHero(heroData: any, orgSecret: string): Promise<any>
         return response.data;
     } catch (error: any) {
         errorStore.setError(error?.message);
-        return null;
+        return error;
     }
 }
 
@@ -48,7 +48,7 @@ export async function getHeroById(id: string, orgSecret: string): Promise<any> {
         return response.data;
     } catch (error: any) {
         errorStore.setError(error?.message);
-        return null;
+        return error;
     }
 }
 
@@ -59,6 +59,6 @@ export async function updateAuthHero(heroData: any): Promise<any> {
         return response.data;
     } catch (error: any) {
         errorStore.setError(error?.message);
-        return null;
+        return error;
     }
 }
